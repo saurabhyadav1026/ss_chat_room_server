@@ -3,9 +3,9 @@
 
 import express from 'express';
 import { User } from './dbschema.js'
-import getGenRes from '.././controll/getGenRes.js';
+//import getGenRes from '../../controll/getGenRes.js';
 
-import sendOtp from '../mail/sendOtp.js';
+import sendOtp from '../../mail/sendOtp.js';
 
 
 
