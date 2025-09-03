@@ -100,8 +100,10 @@ let chat=[];
     chat= user.chats[chatuser].chat
 
     if(user.unread&&user.unread[chatuser]&&user.unread[chatuser]>0){
+      let unread_=user.unread;
+      unread_[x]=0;
       doBlueTick(activeuser,chatuser);  // to do blue tick the msg
-    await User.updateOne({'public_info.username':activeuser},{$set:{unread:0}})
+    await User.updateOne({'public_info.username':activeuser},{$set:{unread:unread_}})
   }
  return chat;
   }
