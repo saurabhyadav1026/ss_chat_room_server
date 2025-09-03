@@ -13,7 +13,7 @@ import User ,{User_list} from './dbschema.js'
 
 export const getUserInfo=async(username)=>{
 
-    let user=await User.find({public_info:{username:username}});
+    let user=await User.findOne({'public_info.username':username});
     return user.public_info;
 
 }
@@ -21,23 +21,41 @@ export const getUserInfo=async(username)=>{
 
 
 
-export const chatList=async()=>{
-
-
-    let user=await User.find({public_info:{username:username}});
-    let chats=Object.keys(user.chats);
+export const getChatsList=async(username)=>{
+  if(!username)return []
+    let user=await User.findOne({'public_info.username':username});
     let chats_list=[]
-    chats.forEach(async(u)=>{
-        chats_list.push({username:u,name:await getname(u),unread:user.unread.u});
-    })
-    return user.public_info;
+    
+   if(user.chats){
+  for (const u of  Object.keys(user.chats)){
+    let x;
+if(u.slice(0,5)==='sbhai')x={name:user.chats[u].name,username:u,unread:0,dp:'https://i.ibb.co/WpB24TDH/light-logo.png'}
+        else {x=await getPublicInfo(u)
+        x['unread']=user.unread[u] ||0  }
+        chats_list.push(x)
+    }
+
+if(user['unread']){let unread_chat=user['unread']   
+       Object.keys(unread_chat).forEach((x)=>{
+     if(username!==x&&unread_chat[x]!==0) doDoubleTick(username,x);    // to double tick the msg
+       });}
+
+    }
+    return chats_list;
 
 }
 
-const getname=async(username)=>{
-    let user=await User_list.find({username:username});
-    return user.name;
+export const getName=async(username)=>{
+    let user=await User_list.findOne({username:username});
+    return user[0].name;
 }
+
+
+const getPublicInfo=async(username)=>{
+    let user=await User.findOne({'public_info.username':username});
+    return user.public_info; 
+}
+
 
 
 
@@ -47,7 +65,7 @@ export const getsearchList=async(username,search_input)=>{
     let search_list=[];
     
 
-    let chats_list=await chatList(username);
+    let chats_list=await getChatsList(username);
     chats_list.forEach((u)=>{
         if(u.username.includes(search_input)||u.name.includes(search_input))search_list.push(u);
     })
@@ -65,10 +83,32 @@ export const getsearchList=async(username,search_input)=>{
 
 
 export const getChat=async(activeuser,chatuser)=>{
+  if(!chatuser)return []
+let chat=[];
+   try{
+    let user=await User.findOne({'public_info.username':activeuser});
+  if (chatuser.slice(0,5)==='sbhai') {
+    user.chats[chatuser].reqs.forEach((r, i) => {
+      let rr = user['chats'][chatuser]['ress'][i]
+      chat.push({time:"", by: 1, text: r }, { by: 2, text: rr })
 
-    let user=await User.find({public_info:{username:activeuser}});
-    return user.chats[chatuser].chat
-    
+    });
+    return chat
+  }
+  
+  else if( user.chats[chatuser]){ 
+    chat= user.chats[chatuser].chat
+
+    if(user.unread&&user.unread[chatuser]&&user.unread[chatuser]>0){
+      doBlueTick(activeuser,chatuser);  // to do blue tick the msg
+    await User.updateOne({'public_info.username':activeuser},{$set:{unread:0}})
+  }
+ return chat;
+  }
+   }
+   catch{}
+   
+    return chat;
 }
 
 
@@ -78,34 +118,36 @@ export const getChat=async(activeuser,chatuser)=>{
 export const sendMsg=async(activeuser,chatuser,text)=>{
 
 
- const user1 = await User.findOne({public_info:{ username: activeuser }})
-  let c1 = user1['chats'];
-  if(c1[req.query.activechat])c1[activechat].chat.push({ time:getTime(), by: 1, text: req.query.text, status: 1 });
+ const user1 = await User.findOne({"public_info.username": activeuser })
+  if(!user1['chats'])user1['chats']={}
+ let c1 = user1['chats'];
+  if(c1[chatuser])c1[chatuser].chat.push({ time:getTime(), by: 1, text: text, status: 1 });
  
  
-  else {c1[req.query.activechat]={chat:[{ time: getTime(), by: 1, text: req.query.text, status:1 }],
+  else {c1[chatuser]={chat:[{ time: getTime(), by: 1, text: text, status:1 }],
 chat_setting:getDefaultChatSetting()}
  }
-  await User.updateOne({public_info:{ username: req.query.activeuser }}, { $set: { chats: c1 } })
+  await User.updateOne({"public_info.username": activeuser }, { $set: { chats: c1 } })
   
   // if it is not a self msg
-  if (!(req.query.activeuser === req.query.activechat)) {
-    const user2 = await User.findOne({public_info: {username:chatuser }})
+  if (!(activeuser === chatuser)) {
+    const user2 = await User.findOne({'public_info.username':chatuser })
+    if(!user2.chats)user2['chats']={}
     let c2 = user2.chats;
-    if (!user2.chats[activeuser].chat) {c2[activeuser]={chat: [{ time: getTime(), by: 2, text: req.query.text }],
-chat_setting:getDefaultChatSetting()}
+    if(!c2[activeuser]){c2[activeuser]={chat_setting:getDefaultChatSetting(),chat:[{ time: getTime(), by: 2, text: text }]}
+    
     }
-    else c2[activeuser].chat.push({ time: getTime(), by: 2, text: req.query.text });
+    else c2[activeuser].chat.push({ time: getTime(), by: 2, text: text });
   
-
+if(!user2['unread'])user2['unread']={}
     let un_read=user2['unread'];
-    if(un_read[req.query.activeuser]) un_read[req.query.activeuser] =un_read[req.query.activeuser] +1
-    else un_read[req.query.activeuser]=1;
+    if(un_read[activeuser]) un_read[activeuser] =un_read[activeuser] +1
+    else un_read[activeuser]=1;
 
-    await User.updateOne({public_info:{ username: activechat }}, { $set: { chats: c2, isReloade: true, unread:un_read} })
+    await User.updateOne({"public_info.username": chatuser }, { $set: { chats: c2, is_reloade: true, unread:un_read} })
 
   }
-  res.json({ value: "done" })
+  
 
 
 
@@ -116,4 +158,45 @@ const getTime=()=>{
   const now=new Date();
   let t=now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit',second:'2-digit' });
   return t;
+}
+
+
+const getDefaultChatSetting=()=>{
+  return {}
+}
+
+
+
+const doBlueTick=async(A,x)=>{
+ let user=await User.findOne({'public_info.username':x})
+ let chats=user.chats;
+let  chat=chats[A].chat;
+  for(let i=(chat.length)-1;i>=0;i--){
+    if(chat[i].by===2)continue;
+    else if(chat[i].by===1&&chat[i].status<3){
+      chat[i].status=3;
+    }
+   else break;
+  }
+  chats[A].chat=chat;
+  await User.updateOne({'public_info.username':x},{$set:{chats:chats,is_reloade:true}})
+}
+
+
+
+const doDoubleTick=async(A,x)=>{
+
+  let user=await User.findOne({'public_info.username':x})
+ let chats=user.chats;
+let  chat=chats[A].chat;
+  for(let i=(chat.length)-1;i>=0;i--){
+    if(chat[i].by===2)continue;
+    else if(chat[i].by===1&&chat[i].status<2){
+      chat[i].status=2;
+    }
+   else break;
+  }
+  chats[A].chat=chat;
+  await User.updateOne({'public_info.username':x},{$set:{chats:chats,is_reloade:true}})
+  
 }

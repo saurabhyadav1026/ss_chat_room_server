@@ -6,10 +6,10 @@ import User ,{User_list}from './dbschema.js'
        const  user = {}
 
         user.public_info = {
-            dp: "",
+            dp: "https://i.ibb.co/QvwtKDYz/nodp.jpg",
             name: name,
             username: username,
-            about: ""
+            about: "hey! i am using SSP app."
 
         };
 

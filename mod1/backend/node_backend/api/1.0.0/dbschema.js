@@ -8,13 +8,13 @@ import mongoose from "mongoose";
 
 const U_schema=mongoose.Schema({
 
-public_info:{},
-personal_info:{},
-app_setting:{},
-account_setting:{},
+public_info:Object,
+personal_info:Object,
+app_setting:Object,
+account_setting:Object,
 is_reloade:Boolean,
-chats:{},
-unread:{}
+chats:Object,
+unread:Object
 
 
 

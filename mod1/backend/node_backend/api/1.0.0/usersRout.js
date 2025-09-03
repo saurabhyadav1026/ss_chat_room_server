@@ -3,10 +3,10 @@
 
 import express from 'express';
 import User,{ User_list } from './dbschema.js'
-import getGenRes from '../controll/getGenRes.js';
+import getGenRes from '../../controll/getGenRes.js';
 
-import sendOtp from '../mail/sendOtp.js';
-import { getChat, getsearchList, sendMsg } from './user.js';
+import sendOtp from '../../mail/sendOtp.js';
+import { getChat, getsearchList, sendMsg,getName, getChatsList } from './user.js';
 import newUser from './new_user.js';
 
 
@@ -22,20 +22,18 @@ usersRoute.get('/newuser', async (req, res) => {
 });
 
 
+usersRoute.get('/getname',async(req,res)=>{
+let name= await getName(req.query.username);
+res.json({value:name})
+
+})
+
 
 
 
 usersRoute.get('/newchat', async (req, res) => {
 
-  const us = await User.findOne({ username: req.query.activeuser })
-  const c = us.chats;
-  const unread = us.unread;
-  if (req.query.activechat.includes('sbhai')) c[req.query.activechat] = { name: req.query.activechat, reqs: [], ress: [] };
-  else if (c[req.query.activechat]) { }      // for if already have chat with acitivechat
-  else {
-    c[req.query.activechat] = [];
-  }
-  await User.updateOne({ username: req.query.activeuser }, { $set: { chats: c, unread: unread } })
+ 
   res.json({ value: "done" })
 
 });
@@ -48,16 +46,7 @@ usersRoute.get('/checkisusernameavailble', async (req, res) => {
 })
 
 usersRoute.get('/getchatslist', async (req, res) => {
-let chat_list=await  getChat(req.query.activeuser)  
-       let unread_chat=await User.findOne({username:req.query.activeuser});
-       unread_chat=unread_chat['unread']   
-       Object.keys(unread_chat).forEach((x)=>{
-     if(req.query.activeuser!==req.query.activechat&&unread_chat[x]!==0) doDoubleTick(req.query.activeuser,x);    // to double tick the msg
-   
-       })
-  
-  
-  
+let chat_list=await  getChatsList(req.query.activeuser)  
   res.json({ value: chat_list });
 });
 
@@ -78,17 +67,19 @@ usersRoute.get('/getname', async (req, res) => {
 
 usersRoute.get('/getisreloade', async (req, res) => {
 
-  const u = await User.findOne({public_info:{ username: req.query.username }})
-  res.json({ value: u['isReloade'] });
+ if( req.query.username){ 
+  const u = await User.findOne({'public_info.username': req.query.username })
+
+  res.json({ value: u.is_reloade });}
+  else res.json({value:false})
 })
 
 
 usersRoute.get('/verifyuser', async (req, res) => {
-  const u = await User.findOne({public_info:{ username: req.query.username }})
-  let v = false;
-  if (u && u.personal_info.userpassword === req.query.userpassword) v = true
-
-  res.json({ value: v });
+  const u = await User.findOne({"public_info.username": req.query.username })
+  let val = false;
+  if (u && u.personal_info.password === req.query.password) val = true
+  res.json({status:val, value: u.public_info});
 
 })
 
@@ -101,27 +92,8 @@ usersRoute.get('/getsearchlist', async (req, res) => {
 
 
 usersRoute.get('/getchat', async (req, res) => {
-  let chat = [];
-  const user = await User.findOne({ username: req.query.activeuser })
   
-  if (req.query.activechat.includes('sbhai')) {
-    user['chats'][req.query.activechat.toString()]['reqs'].forEach((r, i) => {
-      let rr = user['chats'][req.query.activechat]['ress'][i]
-      chat.push({time:"", by: 1, text: r }, { by: 2, text: rr })
-
-    }
-    )
-  }
-  else{
-    const user = await User.findOne({ username: req.query.activeuser })
-  
-    if(user['chats'][req.query.activechat]){chat =await  getChat(req.query.activeuser,req.query.activechat)
-    let us_unread=user['unread']
-    us_unread[req.query.activechat]=0;
-    doBlueTick(req.query.activeuser,req.query.activechat);  // to do blue tick the msg
-    await User.updateOne({username:req.query.activeuser},{$set:{unread:us_unread}})
-  }
-}
+    let chat =await  getChat(req.query.activeuser,req.query.activechat)
   res.json({ value: chat });
 
 })
@@ -132,12 +104,13 @@ usersRoute.get('/getchat', async (req, res) => {
 
 
 usersRoute.get('/sendtoai', async (req, res) => {
-  const user = await User.findOne({ username: req.query.activeuser })
-
+  const user = await User.findOne({'public_info.username': req.query.activeuser })
+if(!user['chats'])user['chats']={}
   const c = user['chats'];
+  if(!c[req.query.activechat])c[req.query.activechat]={name:req.query.activechat,reqs:[],ress:[]}
   c[req.query.activechat]['reqs'].push(req.query.req);
   c[req.query.activechat]['ress'].push(await getGenRes(req.query.req));
-  await User.updateOne({ username: req.query.activeuser }, { $set: { chats: c } })
+  await User.updateOne({'public_info.username': req.query.activeuser }, { $set: { chats: c } })
 
   res.json({ value: "done" })
 })
@@ -147,13 +120,13 @@ usersRoute.get('/sendtoai', async (req, res) => {
 usersRoute.get('/sendtofriend', async (req, res) => {
 
 let rr=await sendMsg(req.query.activeuser,req.query.activechat,req.query.text);
-res.json({value:rr})
+res.json({value:'done'})
 })
 
 
 
 usersRoute.get('/reloaded', async (req, res) => {
-  await User.updateOne({public_info:{ username: req.query.username }}, { $set: { isReloade: false } })
+  await User.updateOne({"public_info.username": req.query.username }, { $set: { is_reloade: false } })
   res.json({})
 })
 
@@ -167,13 +140,13 @@ await sendOtp(req.query.email,res)
 
 
 usersRoute.get('/getloguser',async(req,res)=>{
-  let us= await User.findOne({username:req.query.username})
-  res.json({value:{username:us.username,name:us.name,email:us.email}})
+  let us_info=await User.findOne({public_info:{username:req.query.username}})
+  res.json({value:us_info})
 })
 
 usersRoute.get('/getuser',async(req,res)=>{
-  let us=await User.findOne({username:req.query.username})
-  res.json({value:{username:us.username,name:us.name}})
+  let us_info=await User.findOne({public_info:{username:req.query.username}})
+  res.json({value:us_info})
 })
 
 
@@ -208,37 +181,6 @@ const isUserAvailble = async (username) => {
 
 
 
-const doBlueTick=async(A,x)=>{
 
- 
-  let chats=await User.findOne({username:x})
-
-  chats=chats['chats'];
-  for(let i=(chats[A].length)-1;i>=0;i--){
-    if(chats[A][i].by===1&&chats[A][i].status<3){
-      chats[A][i].status=3;
-    }
-     else if(chats[A][i].by===2){}
-   else break;
-  }
-  await User.updateOne({username:x},{$set:{chats:chats,isReloade:true}})
-}
-
-
-
-const doDoubleTick=async(A,x)=>{
-
-  
-  let chats=await User.findOne({username:x})
-  chats=chats['chats'];
-  for(let i=(chats[A].length)-1;i>=0;i--){
-    if(chats[A][i].by===1&&chats[A][i].status<2){
-      chats[A][i].status=2;
-    }
-    else if(chats[A][i].by===2){}
-   else break;
-  }
-  await User.updateOne({username:x},{$set:{chats:chats,isReloade:true}})
-}
 
 
