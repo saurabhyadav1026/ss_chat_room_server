@@ -35,7 +35,7 @@ if(u.slice(0,5)==='sbhai')x={name:user.chats[u].name,username:u,unread:0,dp:'htt
         chats_list.push(x)
     }
 
-if(user['unread']){let unread_chat=user['unread']   
+if(user.unread){let unread_chat=user.unread   
        Object.keys(unread_chat).forEach((x)=>{
      if(username!==x&&unread_chat[x]!==0) doDoubleTick(username,x);    // to double tick the msg
        });}
@@ -89,7 +89,7 @@ let chat=[];
     let user=await User.findOne({'public_info.username':activeuser});
   if (chatuser.slice(0,5)==='sbhai') {
     user.chats[chatuser].reqs.forEach((r, i) => {
-      let rr = user['chats'][chatuser]['ress'][i]
+      let rr = user.chats[chatuser]['ress'][i]
       chat.push({time:"", by: 1, text: r }, { by: 2, text: rr })
 
     });
@@ -101,7 +101,7 @@ let chat=[];
 
     if(user.unread&&user.unread[chatuser]&&user.unread[chatuser]>0){
       let unread_=user.unread;
-      unread_[x]=0;
+      unread_[chatuser]=0;
       doBlueTick(activeuser,chatuser);  // to do blue tick the msg
     await User.updateOne({'public_info.username':activeuser},{$set:{unread:unread_}})
   }
