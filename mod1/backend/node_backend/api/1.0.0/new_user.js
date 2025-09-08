@@ -1,12 +1,13 @@
 
 
+import { buffer } from 'stream/consumers';
 import User ,{User_list}from './dbschema.js'
 
  const newUser=async(name, username, password, email)=> {
        const  user = {}
 
         user.public_info = {
-            dp: "https://i.ibb.co/QvwtKDYz/nodp.jpg",
+            dp: buffer,
             name: name,
             username: username,
             about: "hey! i am using SSP app."
