@@ -46,13 +46,13 @@ if(user.unread){let unread_chat=user.unread
 }
 
 export const getName=async(username)=>{
-    let user=await User_list.findOne({username:username});
-    return user[0].name;
+    let name=await User.findOne({'public_info.username':username},{'public_info.name':1});
+    return name;
 }
 
 
 const getPublicInfo=async(username)=>{
-    let user=await User.findOne({'public_info.username':username});
+    let user=await User.findOne({'public_info.username':username},{'public_info.name':1,'public_info.username':1});
     return user.public_info; 
 }
 
@@ -83,20 +83,26 @@ export const getsearchList=async(username,search_input)=>{
 
 
 export const getChat=async(activeuser,chatuser)=>{
+  console.log("sdfcujygh")
   if(!chatuser)return []
 let chat=[];
    try{
-    let user=await User.findOne({'public_info.username':activeuser});
+    let user=await User.findOne({'public_info.username':activeuser},{chats:1,unread:1});
+    console.log(chatuser)
+      console.log(user)
+ //   console.log(user[chatuser])
   if (chatuser.slice(0,5)==='sbhai') {
     user.chats[chatuser].reqs.forEach((r, i) => {
       let rr = user.chats[chatuser]['ress'][i]
       chat.push({time:"", by: 1, text: r }, { by: 2, text: rr })
 
     });
+
     return chat
   }
   
   else if( user.chats[chatuser]){ 
+
     chat= user.chats[chatuser].chat
 
     if(user.unread&&user.unread[chatuser]&&user.unread[chatuser]>0){
@@ -105,6 +111,7 @@ let chat=[];
       doBlueTick(activeuser,chatuser);  // to do blue tick the msg
     await User.updateOne({'public_info.username':activeuser},{$set:{unread:unread_}})
   }
+
  return chat;
   }
    }
@@ -170,8 +177,8 @@ const getDefaultChatSetting=()=>{
 
 
 const doBlueTick=async(A,x)=>{
- let user=await User.findOne({'public_info.username':x})
- let chats=user.chats;
+ let chats=await User.findOne({'public_info.username':x},{chats:1})
+ 
 let  chat=chats[A].chat;
   for(let i=(chat.length)-1;i>=0;i--){
     if(chat[i].by===2)continue;
@@ -188,8 +195,8 @@ let  chat=chats[A].chat;
 
 const doDoubleTick=async(A,x)=>{
 
-  let user=await User.findOne({'public_info.username':x})
- let chats=user.chats;
+  let chats=await User.findOne({'public_info.username':x},{chats:1})
+
 let  chat=chats[A].chat;
   for(let i=(chat.length)-1;i>=0;i--){
     if(chat[i].by===2)continue;
