@@ -1,6 +1,7 @@
   import express from 'express';
 import  cors from 'cors';
 import dotenv from 'dotenv'
+import MediaKit from './media/MediaKit.js'
 
 import User,{app_data} from './api/1.0.0/dbschema.js';
 //old API version
@@ -56,17 +57,12 @@ res.status(200).send("DP updated successfully!");
   }
 )
 
-app.get('/user/getdp/:username',async(req,res)=>{
-  
- const user=await User.findOne({'public_info.username':req.params.username}) ;
-  if(!user||!user.public_info.dp){
-    const dpp=await app_data.findOne({type:'default'});
-    res.set('content-type',dpp.data.no_dp.imgtype);
-     res.send(dpp.data.no_dp.img.buffer)
-  }
-else{  res.set('content-type',user.public_info.dp.imgtype)
- res.send(user.public_info.dp.img.buffer)}
+
+app.get('/get_authentiator',async(req,res)=>{
+ 
+  res.json(MediaKit.getAuthenticationParameters());
 })
+
 
 
 

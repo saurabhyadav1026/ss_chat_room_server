@@ -7,7 +7,7 @@ import User ,{User_list}from './dbschema.js'
        const  user = {}
 
         user.public_info = {
-            dp: buffer,
+            dp: "https://ik.imagekit.io/sbhtechhub/sspapp/no_dp.jpg?updatedAt=1757939586164",
             name: name,
             username: username,
             about: "hey! i am using SSP app."

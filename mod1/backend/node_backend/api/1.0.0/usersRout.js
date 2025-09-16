@@ -85,8 +85,10 @@ usersRoute.get('/verifyuser', async (req, res) => {
 
 
 usersRoute.get('/getsearchlist', async (req, res) => {
-
-  let search_list=await getsearchList(req.query.activeuser,req.query.input)
+  let search_list=[];
+if(req.query.input==""){search_list= await getChatsList(req.query.activeuser)
+}
+  else search_list=await getsearchList(req.query.input)
   res.json({ value: search_list })
 })
 
@@ -149,6 +151,17 @@ usersRoute.get('/getuser',async(req,res)=>{
   res.json({value:us_info})
 })
 
+
+
+usersRoute.post('/setdp',async(req,res)=>{
+  try{
+await User.updateOne({'public_info.username':req.body.username},{$set:{'public_info.dp':req.body.dpurl}})
+res.json({value:true})
+  }
+  catch(e){
+    res.json({value:false})
+  } 
+})
 
 
 export default usersRoute

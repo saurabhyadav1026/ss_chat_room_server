@@ -24,7 +24,7 @@ export const getUserInfo=async(username)=>{
 export const getChatsList=async(username)=>{
   if(!username)return []
     let user=await User.findOne({'public_info.username':username});
-    let chats_list=[]
+    let chats_list=[];
     
    if(user.chats){
   for (const u of  Object.keys(user.chats)){
@@ -36,6 +36,7 @@ if(u.slice(0,5)==='sbhai')x={name:user.chats[u].name,username:u,unread:0,dp:'htt
     }
 
 if(user.unread){let unread_chat=user.unread   
+
        Object.keys(unread_chat).forEach((x)=>{
      if(username!==x&&unread_chat[x]!==0) doDoubleTick(username,x);    // to double tick the msg
        });}
@@ -52,7 +53,7 @@ export const getName=async(username)=>{
 
 
 const getPublicInfo=async(username)=>{
-    let user=await User.findOne({'public_info.username':username},{'public_info.name':1,'public_info.username':1});
+    let user=await User.findOne({'public_info.username':username},{public_info:1});
     return user.public_info; 
 }
 
@@ -60,19 +61,17 @@ const getPublicInfo=async(username)=>{
 
 
 
-export const getsearchList=async(username,search_input)=>{
+export const getsearchList=async(search_input)=>{   
+ 
 
-    let search_list=[];
-    
-
-    let chats_list=await getChatsList(username);
-    chats_list.forEach((u)=>{
-        if(u.username.includes(search_input)||u.name.includes(search_input))search_list.push(u);
-    })
-    
-    let user_list=await User_list.find();
+let search_list=[];
+    let user_list=await User.find({},{public_info:1,_id:0});
+   
     user_list.forEach((u)=>{
-        if(u.username.includes(search_input)||u.name.includes(search_input))search_list.push(u);
+    
+  
+        if(u.public_info.username.toLowerCase().includes(search_input.toLowerCase())||u.public_info.name.toLowerCase().includes(search_input.toLowerCase()))search_list.push(u.public_info);
+        if(search_list.length>10)c;
     })
 
 
@@ -83,14 +82,12 @@ export const getsearchList=async(username,search_input)=>{
 
 
 export const getChat=async(activeuser,chatuser)=>{
-  console.log("sdfcujygh")
+
   if(!chatuser)return []
 let chat=[];
    try{
     let user=await User.findOne({'public_info.username':activeuser},{chats:1,unread:1});
-    console.log(chatuser)
-      console.log(user)
- //   console.log(user[chatuser])
+   
   if (chatuser.slice(0,5)==='sbhai') {
     user.chats[chatuser].reqs.forEach((r, i) => {
       let rr = user.chats[chatuser]['ress'][i]
@@ -196,7 +193,8 @@ let  chat=chats[A].chat;
 const doDoubleTick=async(A,x)=>{
 
   let chats=await User.findOne({'public_info.username':x},{chats:1})
-
+ 
+if(!chats[A].chat)return;
 let  chat=chats[A].chat;
   for(let i=(chat.length)-1;i>=0;i--){
     if(chat[i].by===2)continue;
