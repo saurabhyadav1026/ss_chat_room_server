@@ -174,8 +174,9 @@ const getDefaultChatSetting=()=>{
 
 
 const doBlueTick=async(A,x)=>{
- let chats=await User.findOne({'public_info.username':x},{chats:1})
- 
+ let chats=await User.findOne({'public_info.username':x},{chats:1,_id:0})
+ chats=chats.chats;
+
 let  chat=chats[A].chat;
   for(let i=(chat.length)-1;i>=0;i--){
     if(chat[i].by===2)continue;
@@ -192,8 +193,9 @@ let  chat=chats[A].chat;
 
 const doDoubleTick=async(A,x)=>{
 
-  let chats=await User.findOne({'public_info.username':x},{chats:1})
- 
+  let chats=await User.findOne({'public_info.username':x},{chats:1,_id:0})
+  chats=chats.chats;
+
 if(!chats[A].chat)return;
 let  chat=chats[A].chat;
   for(let i=(chat.length)-1;i>=0;i--){
