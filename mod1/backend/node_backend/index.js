@@ -36,6 +36,8 @@ const upload = multer({ storage });
 app.use('/users',usersRout);
 
 app.get('/sbh/gen',async(req,res)=>{
+  console.log(req.query.req)
+  console.loqg("generating...")
  let text=await getGenRes(req.query.req)
   res.json({value:text})
 })

@@ -106,11 +106,13 @@ usersRoute.get('/getchat', async (req, res) => {
 
 
 usersRoute.get('/sendtoai', async (req, res) => {
+ 
   const user = await User.findOne({'public_info.username': req.query.activeuser })
 if(!user['chats'])user['chats']={}
   const c = user['chats'];
   if(!c[req.query.activechat])c[req.query.activechat]={name:req.query.activechat,reqs:[],ress:[]}
   c[req.query.activechat]['reqs'].push(req.query.req);
+  
   c[req.query.activechat]['ress'].push(await getGenRes(req.query.req));
   await User.updateOne({'public_info.username': req.query.activeuser }, { $set: { chats: c } })
 
