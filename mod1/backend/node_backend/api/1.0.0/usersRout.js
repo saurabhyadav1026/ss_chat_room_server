@@ -166,6 +166,18 @@ res.json({value:true})
 })
 
 
+
+usersRoute.get('/deletemsg',async(req,res)=>{
+  
+
+
+
+  res.json({value:'done'})
+})
+
+
+
+
 export default usersRoute
 
 

@@ -37,8 +37,10 @@ app.use('/users',usersRout);
 
 app.get('/sbh/gen',async(req,res)=>{
   console.log(req.query.req)
-  console.loqg("generating...")
+  console.log("generating...")
  let text=await getGenRes(req.query.req)
+ console.log("generated")
+ console.log(text)
   res.json({value:text})
 })
 
