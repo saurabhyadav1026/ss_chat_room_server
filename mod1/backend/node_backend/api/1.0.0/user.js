@@ -1,5 +1,6 @@
 
 
+import { doreloade } from '../../index.js';
 import User ,{User_list} from './dbschema.js'
 
 
@@ -125,6 +126,7 @@ export const sendMsg=async(activeuser,chatuser,text)=>{
 
 
  const user1 = await User.findOne({"public_info.username": activeuser })
+ 
   if(!user1['chats'])user1['chats']={}
  let c1 = user1['chats'];
   if(c1[chatuser])c1[chatuser].chat.push({ time:getTime(), by: 1, text: text, status: 1 });
@@ -150,8 +152,11 @@ if(!user2['unread'])user2['unread']={}
     if(un_read[activeuser]) un_read[activeuser] =un_read[activeuser] +1
     else un_read[activeuser]=1;
 
-    await User.updateOne({"public_info.username": chatuser }, { $set: { chats: c2, is_reloade: true, unread:un_read} })
 
+    await User.updateOne({"public_info.username": chatuser }, { $set: { chats: c2,  unread:un_read} })
+
+
+    doreloade(activeuser,chatuser);
   }
   
 
@@ -196,7 +201,8 @@ let  chat=chats[A].chat;
    else break;
   }
   chats[A].chat=chat;
-  await User.updateOne({'public_info.username':x},{$set:{chats:chats,is_reloade:true}})
+  await User.updateOne({'public_info.username':x},{$set:{chats:chats}})
+  doreloade(A,x);
 }
 
 
@@ -216,6 +222,7 @@ let  chat=chats[A].chat;
    else break;
   }
   chats[A].chat=chat;
-  await User.updateOne({'public_info.username':x},{$set:{chats:chats,is_reloade:true}})
+  await User.updateOne({'public_info.username':x},{$set:{chats:chats}})
+  doreloade(A,x);
   
 }

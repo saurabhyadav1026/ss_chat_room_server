@@ -8,7 +8,7 @@ import getGenRes from '../../controll/getGenRes.js';
 import sendOtp from '../../mail/sendOtp.js';
 import { getChat, getsearchList, sendMsg,getName, getChatsList } from './user.js';
 import newUser from './new_user.js';
-
+import { doreloade } from '../../index.js';
 
 
 
@@ -65,14 +65,7 @@ usersRoute.get('/getname', async (req, res) => {
 })
 
 
-usersRoute.get('/getisreloade', async (req, res) => {
 
- if( req.query.username){ 
-  const u = await User.findOne({'public_info.username': req.query.username })
-
-  res.json({ value: u.is_reloade });}
-  else res.json({value:false})
-})
 
 
 usersRoute.get('/verifyuser', async (req, res) => {
@@ -106,7 +99,7 @@ usersRoute.get('/getchat', async (req, res) => {
 
 
 usersRoute.get('/sendtoai', async (req, res) => {
- 
+ console.log("sending to ai")
   const user = await User.findOne({'public_info.username': req.query.activeuser })
 if(!user['chats'])user['chats']={}
   const c = user['chats'];
@@ -116,6 +109,8 @@ if(!user['chats'])user['chats']={}
   c[req.query.activechat]['ress'].push(await getGenRes(req.query.req));
   await User.updateOne({'public_info.username': req.query.activeuser }, { $set: { chats: c } })
 
+  doreloade();
+
   res.json({ value: "done" })
 })
 
@@ -123,16 +118,13 @@ if(!user['chats'])user['chats']={}
 
 usersRoute.get('/sendtofriend', async (req, res) => {
 
-let rr=await sendMsg(req.query.activeuser,req.query.activechat,req.query.text);
+await sendMsg(req.query.activeuser,req.query.activechat,req.query.text);
 res.json({value:'done'})
 })
 
 
 
-usersRoute.get('/reloaded', async (req, res) => {
-  await User.updateOne({"public_info.username": req.query.username }, { $set: { is_reloade: false } })
-  res.json({})
-})
+
 
 
 
