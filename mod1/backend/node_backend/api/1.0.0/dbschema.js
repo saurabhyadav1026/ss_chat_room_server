@@ -12,7 +12,6 @@ public_info:Object,
 personal_info:Object,
 app_setting:Object,
 account_setting:Object,
-is_reloade:Boolean,
 chats:Object,
 unread:Object
 

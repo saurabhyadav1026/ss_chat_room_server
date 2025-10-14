@@ -19,6 +19,8 @@ import multer from 'multer';
 import {Server} from 'socket.io';
 import http from 'http';
 
+import bodyParser from 'body-parser'
+import { sendMsg } from './api/1.0.0/user.js';
 
 
 
@@ -35,19 +37,37 @@ const app=express();
 
 const server=http.createServer(app);
 
+
+
+
+
 const io= new Server(server,{ cors:{ origin:"*" }});
 
 
+
+
 io.on('connection',(socket)=>{
-  console.log(`user connected: ${socket.id}`);
-  socket.emit("connection");
+ socket.emit('reloade')
+  socket.on('register', async(data) => { 
+     const {username,storekey,bundle}=data;
+     console.log("registering...")
+     console.log(bundle)
+ const public_bundle={
+     registrationId:bundle.registrationId,
+     identityKey:toBase64(bundle.identityKey),
+     preKey:{"keyId":1,"publicKey":toBase64(bundle.preKey.publicKey)},
+     signedPreKey:{"keyId":1,"signature":toBase64(bundle.signedPreKey.signature),"publicKey":toBase64(bundle.signedPreKey.publicKey)},
+     
+ } 
+ console.log("pulic bundle")
+ console.log(public_bundle)
+    await User.updateOne({"public_info.username":username},{$set:{"public_info.public_bundle":public_bundle,"personal_info.storekey":storekey}})
+     console.log("registered")
+   });
 
-  socket.on('register', (username) => {
-    users.set(username, socket.id);
-   
-  });
 
-  
+
+
 
 socket.on('disconnect',()=>{
 users.delete([...users].find(([k, v]) => v === socket.id)?.[0]);
@@ -57,16 +77,31 @@ console.log("disconncet")
 
 
 
-});
+})
+
+
+
+
+app.use(cors({
+  origin:"*",//"sspapp.netlify.app",
+  methods:["GET",'POST',"PUT","DELETE"],
+  credentials:true
+}));
+app.use(express.json());
+app.use(bodyParser.json())
+await connectDB(); 
+
+
+
 
 
 export const doreloade=(a_username,b_username)=>{
     
       
-  if(users.get(b_username)) {       console.log("xxxxxxxuigiug")
+  if(users.get(b_username)) {       
     io.to(users.get(b_username)).emit('reloade');}
     if(users.get(a_username))  {
-      console.log("uigiug")
+ 
       io.to(users.get(a_username)).emit('reloade');}
 }
 
@@ -74,9 +109,7 @@ export const doreloade=(a_username,b_username)=>{
 
 
 
-app.use(cors());
-app.use(express.json());
-await connectDB(); 
+
 
 // middleware
 
@@ -107,7 +140,7 @@ res.status(200).send("DP updated successfully!");
     return res.status(400).send("No file uploaded");
 }
 
-  }
+  }  
 )
 
 
@@ -115,6 +148,7 @@ app.get('/get_authentiator',async(req,res)=>{
  
   res.json(MediaKit.getAuthenticationParameters());
 })
+
 
 
 

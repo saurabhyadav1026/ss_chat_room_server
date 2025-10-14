@@ -9,6 +9,8 @@ import sendOtp from '../../mail/sendOtp.js';
 import { getChat, getsearchList, sendMsg,getName, getChatsList } from './user.js';
 import newUser from './new_user.js';
 import { doreloade } from '../../index.js';
+import argon2 from 'argon2';
+
 
 
 
@@ -16,7 +18,10 @@ const usersRoute = express.Router();
 
 
 usersRoute.get('/newuser', async (req, res) => {
-  await newUser(req.query.name,req.query.username,req.query.password,req.query.email);
+
+  const hash_ps=await argon2.hash(req.query.username,{type:argon2.argon2id});
+
+  await newUser(req.query.name,hash_ps,req.query.password,req.query.email,"req.query.public_bundle","req.query.storekey");
 
   res.json((await User_list.find({username:req.query.username})))
 });
@@ -57,6 +62,7 @@ let chat_list=await  getChatsList(req.query.activeuser)
 
 
 
+
 usersRoute.get('/getname', async (req, res) => {
 
   const u = await getName(req.query.username)
@@ -71,7 +77,7 @@ usersRoute.get('/getname', async (req, res) => {
 usersRoute.get('/verifyuser', async (req, res) => {
   const u = await User.findOne({"public_info.username": req.query.username })
   let val = false;
-  if (u && u.personal_info.password === req.query.password) val = true
+  if (u && await argon2.verify(u.personal_info.password ,req.query.password)) val = true
   res.json({status:val, value: u.public_info});
 
 })
@@ -116,9 +122,9 @@ if(!user['chats'])user['chats']={}
 
 // fo genai getGenRes(req.query.req)
 
-usersRoute.get('/sendtofriend', async (req, res) => {
-
-await sendMsg(req.query.activeuser,req.query.activechat,req.query.text);
+usersRoute.get('/tofriesendnd', async (req, res) => {
+const { sender,reciever, senderCopy,recieverCopy}=req.body;
+await sendMsg(sender,reciever,senderCopy,recieverCopy);
 res.json({value:'done'})
 })
 

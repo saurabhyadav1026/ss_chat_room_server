@@ -3,18 +3,21 @@
 import { buffer } from 'stream/consumers';
 import User ,{User_list}from './dbschema.js'
 
- const newUser=async(name, username, password, email)=> {
+ const newUser=async(name, username, password, email,public_bundle,storekey)=> {
        const  user = {}
 
         user.public_info = {
             dp: "https://ik.imagekit.io/sbhtechhub/sspapp/no_dp.jpg?updatedAt=1757939586164",
             name: name,
             username: username,
-            about: "hey! i am using SSP app."
+            about: "hey! i am using SSP app.",
+
+            public_bundle:public_bundle
 
         };
 
         user.personal_info = {
+            storekey:storekey,
             password: password,
             emai: email,
             active_tokens: []
@@ -28,7 +31,6 @@ import User ,{User_list}from './dbschema.js'
         };
         user.unread={}
 
-        user.is_reloade=false;
 
 const u_l= new User(user);
  const new_user=  new User_list({username:username,name:name})
