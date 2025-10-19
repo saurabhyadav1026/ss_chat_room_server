@@ -66,6 +66,12 @@ io.on('connection',(socket)=>{
    });
 
 
+socket.on('sendtofriend',(data)=>{
+const { sender,reciever, senderCopy,recieverCopy}=data
+await sendMsg(sender,reciever,senderCopy,recieverCopy);
+  
+})
+
 
 
 
