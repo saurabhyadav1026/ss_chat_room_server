@@ -122,7 +122,7 @@ if(!user['chats'])user['chats']={}
 
 // fo genai getGenRes(req.query.req)
 
-usersRoute.get('/tofriesendnd', async (req, res) => {
+usersRoute.get('/sendtofriend', async (req, res) => {
 const { sender,reciever, senderCopy,recieverCopy}=req.body;
 await sendMsg(sender,reciever,senderCopy,recieverCopy);
 res.json({value:'done'})
