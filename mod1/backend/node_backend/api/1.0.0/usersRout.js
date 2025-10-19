@@ -125,12 +125,6 @@ if(!user['chats'])user['chats']={}
 
 
 
-socket.on('sendtofriend',(data)=>{
-const { sender,reciever, senderCopy,recieverCopy}=data
-await sendMsg(sender,reciever,senderCopy,recieverCopy);
-  
-})
-
 
 
 usersRoute.get('/getotp',async(req,res)=>{
