@@ -141,7 +141,7 @@ export const sendMsg = async (activeuser, chatuser, senderCopy, recieverCopy) =>
 
   else {
     // create session
-    socket.emit("createSession", activeuser, chatuser);
+   // socket.emit("createSession", activeuser, chatuser);
 
     // send msg
     c1[chatuser] = {
