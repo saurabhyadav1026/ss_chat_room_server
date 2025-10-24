@@ -170,7 +170,7 @@ export const sendMsg = async (activeuser, chatuser, senderCopy, recieverCopy) =>
 
     await User.updateOne({ "public_info.username": chatuser }, { $set: { chats: c2, unread: un_read } })
 
-
+doreloade(user1.username,user2.username)
   }
 
 
