@@ -1,7 +1,7 @@
 
 
 import { buffer } from 'stream/consumers';
-import User ,{User_list}from './dbschema.js'
+import {User} from '../../db/dbschema.js'
 
  const newUser=async(name, username, password, email,public_bundle,storekey)=> {
        const  user = {}
@@ -23,19 +23,8 @@ import User ,{User_list}from './dbschema.js'
             active_tokens: []
         };
 
-        user.app_setting={};
-        user.account_setting={};
-
-        user.chats={
-
-        };
-        user.unread={}
-
-
 const u_l= new User(user);
- const new_user=  new User_list({username:username,name:name})
-  
-  await new_user.save();
+
   await u_l.save();
     }
 

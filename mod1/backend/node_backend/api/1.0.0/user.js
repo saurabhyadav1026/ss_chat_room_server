@@ -1,7 +1,6 @@
 
 
-import { doreloade } from '../../index.js';
-import User, { User_list } from './dbschema.js'
+import {User} from '../../db/dbschema.js'
 
 
 
@@ -170,7 +169,7 @@ export const sendMsg = async (activeuser, chatuser, senderCopy, recieverCopy) =>
 
     await User.updateOne({ "public_info.username": chatuser }, { $set: { chats: c2, unread: un_read } })
 
-doreloade(user1.username,user2.username)
+//doreloade(user1.username,user2.username)
   }
 
 
@@ -198,7 +197,7 @@ const getTime = () => {
 
 const getDefaultChatSetting = () => {
   return {}
-}
+}         
 
 
 
@@ -216,7 +215,7 @@ const doBlueTick = async (A, x) => {
   }
   chats[A].chat = chat;
   await User.updateOne({ 'public_info.username': x }, { $set: { chats: chats } })
-  doreloade(A, x);
+ // doreloade(A, x);
 }
 
 
@@ -237,6 +236,6 @@ if(!chats[A])return;
   }
   chats[A].chat = chat;
   await User.updateOne({ 'public_info.username': x }, { $set: { chats: chats } })
-  doreloade(A, x);
+  //doreloade(A, x);
 
 }

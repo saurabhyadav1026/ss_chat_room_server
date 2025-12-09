@@ -2,13 +2,13 @@
 
 
 import express from 'express';
-import User,{ User_list } from './dbschema.js'
+import {User} from '../../db/dbschema.js'
 import getGenRes from '../../controll/getGenRes.js';
 
 import sendOtp from '../../mail/sendOtp.js';
 import { getChat, getsearchList, sendMsg,getName, getChatsList } from './user.js';
 import newUser from './new_user.js';
-import { doreloade } from '../../index.js';
+
 import argon2 from 'argon2';
 
 
@@ -23,7 +23,7 @@ usersRoute.get('/newuser', async (req, res) => {
 
   await newUser(req.query.name,hash_ps,req.query.password,req.query.email,"req.query.public_bundle","req.query.storekey");
 
-  res.json((await User_list.find({username:req.query.username})))
+  res.json({username:req.query.username})
 });
 
 
@@ -77,8 +77,19 @@ usersRoute.get('/getname', async (req, res) => {
 usersRoute.get('/verifyuser', async (req, res) => {
   const u = await User.findOne({"public_info.username": req.query.username })
   let val = false;
-  if (u && await argon2.verify(u.personal_info.password ,req.query.password)) val = true
-  res.json({status:val, value: u.public_info});
+  if (u && await argon2.verify(u._doc.personal_info.password ,req.query.password)) val = true
+
+  console.log("you will loggin soon");
+
+  const user={
+    _id:u._id,
+    name:u.public_info.name,
+    username:u.public_info.username,
+    dp:u.public_info.dp,
+    about:u.public_info.about
+  }
+  console.log(user)
+  res.json({status:val, value:user});
 
 })
 
@@ -115,7 +126,7 @@ if(!user['chats'])user['chats']={}
   c[req.query.activechat]['ress'].push(await getGenRes(req.query.req));
   await User.updateOne({'public_info.username': req.query.activeuser }, { $set: { chats: c } })
 
-  doreloade();
+  //doreloade();
 
   res.json({ value: "done" })
 })

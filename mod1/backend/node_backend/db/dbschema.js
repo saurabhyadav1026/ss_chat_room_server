@@ -1,54 +1,63 @@
 
+import mongoose from 'mongoose'
 
+const user_schema = new mongoose.Schema({
 
-const user_schema=new mongoose.Schema({
-                                  
-                                  socketId:[String],
-                                  public_info:{
-                                    username:{type:String,require:true,unique:true}
-                                  },
-                                  private_info:{
-                                    mailId:{type:String,required:true,unique:true}
-                                  },
+  socketId: [String],
+  public_info: {
+    username: { type: String, require: true, unique: true },
+    name:String,
+    about:String,
+    dp:String
+
+  },
+  private_info: {
+    mailId: { type: String, required: true, unique: true },
+    password: { type: String, required: true, unique: true },
+  },
 })
 
-const User=mongoose.model('User',user_schema);
-export User;
 
 
 
-const chat_room_schema=new mongoose.Schema({
-  members:[{  memberId:{type:mongoose.Schema.Types.ObjectId, ref:"User"  ,required:true}, unreadCount: Number}],
-  
-last_msg:String,
-room_setting:Object
+export const User = mongoose.model('User', user_schema);
+
+
+ // schema for chat room 
+
+const chat_room_schema = new mongoose.Schema({
+
+  roomType:{type:String,default:"personal_chat"},
+  members: [{ _id: false ,memberId: { type: String, ref: "User" },unreadCount:{type:Number,default:0}}],
+  roomName:String,
+  lastMsgId:{type:String,default:null},
+   roomSetting: Object
 })
 
-const Chat_Room =mongoose.model('Chat_Room',chat_room_schema);
-export Chat_Room;
+export const Chat_Room = mongoose.model('Chat_Room', chat_room_schema);
 
 
 
 
 
 
-const message_schema=new mongoose.Schema({
 
-  roomId:{ type:mongoose.Schema.Types.ObjectId, ref:"Chat_Room" ,required:true},
-  senderId:{type:mongoose.Schema.Types.ObjectId, ref:"User",required:true},
-  text:String,
-  timeStamp:{type:Date,default:Date.now},
-  tick:{type:Number ,required:true},
-  tickStatus:[Object],
-  deleteFor:[{type:mongoose.Schema.Types.ObjectId, ref:"User"}],
-  beforeEdit:[{text:String,timeStamp:{type:Date,default:Date.now}}],
-  attachmentFile:[String]
-  
+const message_schema = new mongoose.Schema({
+
+  roomId: { type: String, ref: "Chat_Room", required: true },
+  senderId: { type: String, ref: "User"},
+texts:[{memberId:String,text:String}],
+  tick: { type: Number,default:1, required: true },
+  tickStatus: {send:{ type: Date, default: Date.now },delivered:{ type: Date, default: null },read:{ type: Date, default:null }},
+   beforeEdit: [{ text: String, timeStamp: { type: Date, default: Date.now } }],   
+  deleteFor: [{ type: String, ref: "User"}],
+  attachmentFile: [{type:String,default:null}]
+
 })
 
- const Message=mongoose.model('Message',message_schema);
+export const Message = mongoose.model('Message', message_schema);
 
-export Message;
+
 
 
 
