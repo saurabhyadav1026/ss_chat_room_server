@@ -5,9 +5,8 @@ import { Chat_Room } from "../dbschema.js"
 const createChatRoom=async(members)=>{
 
 
-    console.log("we creating chatroo")
+   
 
-    console.log(members)
 
     const {_id}=await Chat_Room.findOneAndUpdate({members:members},{$setOnInsert:{members:members}},{new:true,upsert:true})
        

@@ -26,9 +26,13 @@ const getSearchList = async (search_input) => {
             }
         }
     ])
-
-  
-    return list;
+const slist={}
+  for( const x of list){
+    slist[x._id]=x;
+  }
+  console.log(slist)
+  console.log("ye slist")
+    return slist;
 }
 
 

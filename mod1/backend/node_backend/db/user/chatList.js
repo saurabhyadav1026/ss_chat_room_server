@@ -2,161 +2,161 @@ import { Chat_Room } from "../dbschema.js";
 import { toObjId } from "../db.js";
 
 
-const getChatsList=async (userId)=>{
-let chatsList = []
-chatsList=await Chat_Room.aggregate([
-  {
-    $match: {
-      "members.memberId": userId,
-      roomType: "personal_chat",
+const getChatsList = async (userId) => {
+  let chatsList = []
+  chatsList = await Chat_Room.aggregate([
+
+    // to find all rooms by checking existing of userId in members list.
+    {
+      $match: {
+        "members": userId,
+        roomType: "personal_chat",
+      },
     },
-  },
 
-  // convert string IDs → ObjectId
-  {
-    $addFields: {
-      membersObjId: {
-        $map: {
-          input: "$members",
-          as: "m",
-          in: {
-            memberId: { $toObjectId: "$$m.memberId" }
-          }
-        }
-      }
-    }
-  },
 
-  {
-    $lookup: {
-      from: "users",
-      localField: "membersObjId.memberId",
-      foreignField: "_id",
-      as: "receivers",
-    },
-  },
-
-  // find the other guy
-  {
-    $addFields: {
-      receiver: {
-        $arrayElemAt: [
-          {
+    // convert string IDs → ObjectId
+    {
+      $addFields: {
+        unreadCountObj: {
+          $arrayElemAt: [{
             $filter: {
-              input: "$receivers",
+              input: "$members",
               as: "m",
-              cond: { $ne: ["$$m._id", toObjId(userId)] }
+              cond: { $eq: ['$$m', userId] }
             }
-          },
-          0
-        ]
-      }
-    }
-  },
+          }
+            , 0]
+        },
 
-  {
-    $project: {
-      _id: 1,
-      members: 1,
-      name: "$receiver.public_info.name",
-      roomName: "$receiver.public_info.username",
-      roomDP: "$receiver.public_info.dp",
+
+
+        reciversObjId: {
+          // change the string id into obj id for lookup local field
+          $map: {
+            input: {
+              // find only reciver id 
+              $filter: {
+                input: "$members",
+                as: 'm',
+                cond: { $ne: ['$$m', userId] }
+              }
+            },
+            as: "m",
+            in: { $toObjectId: '$$m' }
+          },
+
+        }
+
+
+      },
+
     },
-  },
-]);
-return chatsList
+
+    {
+      $lookup: {
+        from: "users",
+        localField: "reciversObjId",
+        foreignField: "_id",
+        as: "receivers",
+      }
+    },
+    { $addFields: { receiver: { $arrayElemAt: ['$receivers', 0] } } },
+
+    {
+      $project: {
+        _id: 1,
+        members: 1,
+        unreadCount: '$unreadCountObj.unreadCount',
+        name: "$receiver.public_info.name",
+        roomName: "$receiver.public_info.username",
+        roomDP: "$receiver.public_info.dp",
+        
+      },
+    },
+  ]);
+  
+
+ 
+  const list={}
+for( const chat of chatsList){
+list[chat._id]=chat
+}
+  
+
+  return list
 }
 
 export default getChatsList;
 
+
+
+
+
+
+
+
 export const getchatRoom = async (userId, roomId) => {
-  if (typeof userId !== "string") {
-    console.log("userId is not a string");
-    return [];
-  }
+ 
 
   let chatlist = [];
 
   chatlist = await Chat_Room.aggregate([
     {
       $match: {
-        "members.memberId": userId,
+        "members": userId,
         roomType: "personal_chat",
         _id: toObjId(roomId),
       },
     },
 
-    // convert string → ObjectId for lookup
+   
+    // convert string IDs → ObjectId
     {
       $addFields: {
-        membersObjId: {
+        
+
+
+        reciversObjId: {
+          // change the string id into obj id for lookup local field
           $map: {
-            input: "$members",
+            input: {
+              // find only reciver id 
+              $filter: {
+                input: "$members",
+                as: 'm',
+                cond: { $ne: ['$$m', userId] }
+              }
+            },
             as: "m",
-            in: {
-              memberId: { $toObjectId: "$$m.memberId" }
-            }
-          }
+            in: { $toObjectId: '$$m' }
+          },
+
         }
-      }
+
+
+      },
+
     },
 
     {
       $lookup: {
         from: "users",
-        localField: "membersObjId.memberId",
+        localField: "reciversObjId",
         foreignField: "_id",
         as: "receivers",
-      },
+      }
     },
-
-    {
-      $lookup: {
-        from: "messages",
-        localField: "_id",
-        foreignField: "lastMsgId",
-        as: "lastMsg",
-      },
-    },
-
-    {
-      $addFields: {
-        unreadCounts: {
-          $arrayElemAt: [
-            {
-              $filter: {
-                input: "$receivers",
-                as: "m",
-                cond: { $eq: ["$$m._id", toObjId(userId)] },
-              },
-            },
-            0,
-          ],
-        },
-
-        receiver: {
-          $arrayElemAt: [
-            {
-              $filter: {
-                input: "$receivers",
-                as: "m",
-                cond: { $ne: ["$$m._id", toObjId(userId)] },
-              },
-            },
-            0,
-          ],
-        },
-      },
-    },
+    { $addFields: { receiver: { $arrayElemAt: ['$receivers', 0] } } },
 
     {
       $project: {
-        members: 1,
         _id: 1,
-        unreadCount: "$unreadCounts.unreadCount",
+        members: 1,
         name: "$receiver.public_info.name",
         roomName: "$receiver.public_info.username",
         roomDP: "$receiver.public_info.dp",
+       
       },
     },
   ]);

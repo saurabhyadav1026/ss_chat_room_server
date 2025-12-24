@@ -28,9 +28,8 @@ export const User = mongoose.model('User', user_schema);
 const chat_room_schema = new mongoose.Schema({
 
   roomType:{type:String,default:"personal_chat"},
-  members: [{ _id: false ,memberId: { type: String, ref: "User" },unreadCount:{type:Number,default:0}}],
+  members: [{ type: String, ref: "User" }],
   roomName:String,
-  lastMsgId:{type:String,default:null},
    roomSetting: Object
 })
 

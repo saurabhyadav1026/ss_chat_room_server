@@ -79,6 +79,12 @@ export const getChats = async (userId, roomId) => {
         status = false;
     }
 
+
+const list={}
+for(const msg of chats){
+    list[msg._id]=msg
+}
+
     return { status, data: chats };
 };
 
@@ -92,8 +98,7 @@ export const getMsg = async (userId, msgId) => {
     let chat = [];
     let status = true;
 
-    console.log("msg id is:")
-    console.log(msgId)
+    
 
 
     try {
@@ -170,8 +175,7 @@ export const getMsg = async (userId, msgId) => {
         status = false;
     }
 
-    console.log("msg is")
-    console.log(chat)
+   
 
     return chat[0] ;
 };

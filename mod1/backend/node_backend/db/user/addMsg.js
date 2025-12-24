@@ -1,4 +1,4 @@
-import { Message } from "../dbschema.js";
+import { Chat_Room, Message } from "../dbschema.js";
 
 /* 
 
@@ -17,13 +17,14 @@ texts=[{memberId: " ", text: " "}]
 */
 
 const addMsg=async(data)=>{
+   
     let status=true;
 
 let id=null;
 try{
 const {roomId,senderId,texts}=data;
 
-
+ 
 
 const nmsg={
     roomId:roomId,
@@ -34,6 +35,7 @@ const nmsg={
 
 
 const {_id}=await new Message(nmsg).save();
+
 id= _id;
 }
 catch{
