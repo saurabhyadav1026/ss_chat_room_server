@@ -27,10 +27,10 @@ const otp_mail={
     html:"<h5> Your otp of code :<b> "+otp_code+"</b>   is: </h5><h1>  "+OTP+"</h1> </br></br> <h4>Thankyou</h4> "
 
 }
-
+console.log("we are sending mail")
  sender.sendMail(otp_mail,(err,info)=>{
     if(err){
-        res.json({otp_code:null,otp:null,status:'Error! try again later.'})
+        res.json({otp_code:null,otp:null,status:'Error! try again later.',err:err})
     }
        else{
  res.json({otp_code:otp_code,otp:OTP,status:'ok'})
