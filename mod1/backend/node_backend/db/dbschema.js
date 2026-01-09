@@ -11,8 +11,8 @@ const user_schema = new mongoose.Schema({
     dp:String
 
   },
-  private_info: {
-    mailId: { type: String, required: true, unique: true },
+  personal_info: {
+    email: { type: String, lowercase:true, required: true, unique: true },
     password: { type: String, required: true, unique: true },
   },
 })

@@ -19,9 +19,17 @@ const usersRoute = express.Router();
 
 usersRoute.get('/newuser', async (req, res) => {
 
-  const hash_ps=await argon2.hash(req.query.username,{type:argon2.argon2id});
+  console.log(req.query)
+  const newU={
+    name:req.query.name,
+    username:req.query.username,
+    password:await argon2.hash(req.query.password,{type:argon2.argon2id}),
+    email:req.query.email.toLowerCase(),
 
-  await newUser(req.query.name,hash_ps,req.query.password,req.query.email,"req.query.public_bundle","req.query.storekey");
+
+  }
+
+  await newUser(newU);
 
   res.json({username:req.query.username})
 });
@@ -113,6 +121,20 @@ usersRoute.get('/getchat', async (req, res) => {
 
 
 
+usersRoute.get("/test/",async (req,res)=>{
+
+ let x=  await argon2.hash("d121")
+res.json(x)
+})
+
+/*
+usersRoute.get("/testt/",async (req,res)=>{
+
+ let x=  await argon2.verify("",req.query.ps)
+res.json(x)
+})
+ */
+
 
 
 usersRoute.get('/sendtoai', async (req, res) => {
@@ -178,7 +200,18 @@ usersRoute.get('/deletemsg',async(req,res)=>{
 })
 
 
+/* usersRoute.get("/chageSchema",async(req,res)=>{
+  const x= await User.find({
+  "personal_info.emai": { $exists: true }
+})
+await User.updateMany(  { "personal_info.emai": { $exists: true } },
+  { $rename: { "personal_info.emai": "personal_info.email" } },
+  { strict: false }   // 🔥 THIS FIXES IT)
+)
+res.json({})
 
+})
+ */
 
 export default usersRoute
 
@@ -188,15 +221,10 @@ export default usersRoute
 const isUserAvailble = async (username) => {
   
   let value=true;
-  if (username.includes('sbhai') || username === 'sbhunk')value=false;
-  else {
-    let users = await User_list.find();
-    for (let i = 0; i < users.length; i++) {
-    if (users[i].username === username ){
-      value = false;
-      break;
-    }
-  }}
+
+    let users = await User.find({ "public_info.username": username  },{_id:1});
+    console.log(users)
+    if(users.length>0)value=false;
   return value;
 }
 
