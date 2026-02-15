@@ -1,4 +1,4 @@
-import { Message } from "../dbschema.js";
+import { Message } from "../db/dbschema.js";
 
 
 

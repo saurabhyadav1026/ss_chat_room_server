@@ -1,4 +1,4 @@
-import { Chat_Room } from "../dbschema.js"
+import { Chat_Room } from "../db/dbschema.js"
 
 
 

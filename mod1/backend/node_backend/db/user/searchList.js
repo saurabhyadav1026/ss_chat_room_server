@@ -1,5 +1,5 @@
 
-import { User } from "../dbschema.js";
+import { User } from "../db/dbschema.js";
 
 
 const getSearchList = async (search_input) => {

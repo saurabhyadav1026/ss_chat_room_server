@@ -9,7 +9,7 @@ import MediaKit from './media/MediaKit.js'
 
 //new api version
 import usersRout from './api/1.0.0/usersRout.js';
-import connectDB from './db/db.js';
+import connectDB from './db/db/db.js';
 import getGenRes from './controll/getGenRes.js';
 import multer from 'multer';
 
@@ -20,7 +20,7 @@ import http from 'http';
 
 import bodyParser from 'body-parser'
 
-import { User, Message, Chat_Room } from './db/dbschema.js'
+import { User, Message, Chat_Room } from './db/db/dbschema.js'
 import chatsocket from './socketcomuniation/chatsocket.js';
 dotenv.config()
 
@@ -36,7 +36,7 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json());
-app.use(bodyParser.json())
+app.use(bodyParser.json()) 
 await connectDB();
 // middleware
 const storage = multer.memoryStorage(); // store file in memory as buffer

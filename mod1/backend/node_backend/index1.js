@@ -50,8 +50,7 @@ io.on('connection',(socket)=>{
  socket.emit('reloade')
   socket.on('register', async(data) => { 
      const {username,storekey,bundle}=data;
-     console.log("registering...")
-     console.log(bundle)
+   
  const public_bundle={
      registrationId:bundle.registrationId,
      identityKey:toBase64(bundle.identityKey),
@@ -59,10 +58,9 @@ io.on('connection',(socket)=>{
      signedPreKey:{"keyId":1,"signature":toBase64(bundle.signedPreKey.signature),"publicKey":toBase64(bundle.signedPreKey.publicKey)},
      
  } 
- console.log("pulic bundle")
- console.log(public_bundle)
+ 
     await User.updateOne({"public_info.username":username},{$set:{"public_info.public_bundle":public_bundle,"personal_info.storekey":storekey}})
-     console.log("registered")
+     
    });
 
 

@@ -1,6 +1,6 @@
 
 
-import {User} from '../../db/dbschema.js'
+import {User} from '../../db/db/dbschema.js'
 
 
 

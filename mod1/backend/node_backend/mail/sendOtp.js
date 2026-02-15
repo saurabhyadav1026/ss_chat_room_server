@@ -1,19 +1,19 @@
 
 import sender from './sender.js'
 import dotenv from 'dotenv'
-import { User } from '../db/dbschema.js'
+import { User } from '../db/db/dbschema.js'
 
 dotenv.config()
 
 const sendOtp=async(user_mail,res)=>{
 
-/*   const  checkuniqEmail=await User.find({"personal_info.email":user_mail.toLowerCase()}).collation({locale:'en',strength:2})
+ const  checkuniqEmail=await User.find({"personal_info.email":user_mail.toLowerCase()}).collation({locale:'en',strength:2})
 
   if(checkuniqEmail.length>0){
     res.json({otp_code:null,otp:null,status:' account email id already exist'});
     return;
   }
- */
+ 
 
   
     const OTP=createOTP();

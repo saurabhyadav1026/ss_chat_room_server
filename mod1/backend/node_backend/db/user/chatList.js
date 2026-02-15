@@ -1,5 +1,5 @@
-import { Chat_Room } from "../dbschema.js";
-import { toObjId } from "../db.js";
+import { Chat_Room } from "../db/dbschema.js";
+import { toObjId } from "../db/db.js";
 
 
 const getChatsList = async (userId) => {

@@ -48,12 +48,10 @@ const toBase64 = (arr) => Buffer.from(new Uint8Array(arr)).toString("base64");
 
 
 const fromBase64 = (b64) => {
-  console.log("frombase64")
-  console.log(b64)
+
   const buf = Buffer.from(b64, "base64"); // Node.js Buffer
   const arrbuff=buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
-  console.log("buf")
-  console.log(arrbuff)
+
   return arrayBufferToBase64(arrbuff);//buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
 };
 
@@ -95,10 +93,6 @@ const public_bundle={
 
 }
 
-console.log("pulic bundle")
-console.log(public_bundle)
-
-
    await User.updateOne({"public_info.username":username},{$set:{"public_info.public_bundle":public_bundle,"personal_info.storekey":storekey}})
    
 console.log("registered")
@@ -132,13 +126,9 @@ socket.on("getCreateSession",async({sender,reciever})=>{
     recieverBundle: await getbundle(reciever)
   }
   console.log("we going to send bundle")
-  console.log(data)
+
 
   console.log("checking bundle")
-console.log("IdentityKey type:", data.recieverBundle.identityKey.constructor.name);
-console.log("PreKey type:", data.recieverBundle.preKey.publicKey.constructor.name);
-console.log("SignedPreKey type:",  data.recieverBundle.signedPreKey.publicKey.constructor.name);
-
 
   socket.emit('createSession',data);
 })
@@ -176,7 +166,7 @@ console.log("coverting public bundle to bndle")
 
 
 console.log("send bund")
-console.log(bundle)
+
 return bundle;
 }
 

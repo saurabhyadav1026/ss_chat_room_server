@@ -1,4 +1,4 @@
-import { Chat_Room, Message } from "../dbschema.js"
+import { Chat_Room, Message } from "../db/dbschema.js"
 
 
 export const doAllDoubleTick = async (reciverId) => {

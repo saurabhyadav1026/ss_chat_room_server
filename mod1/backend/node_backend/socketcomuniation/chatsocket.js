@@ -1,4 +1,4 @@
-import { Message, User } from "../db/dbschema.js";
+import { Message, User } from "../db/db/dbschema.js";
 import addMsg from "../db/user/addMsg.js";
 import getchatList, { getchatRoom } from "../db/user/chatList.js";
 import createChatRoom from "../db/user/createChatRoom.js";
@@ -19,14 +19,13 @@ const chatsocket = (socket) => {
 
   console.log("connected");
 
-  socket.emit("getConnect");
+  socket.emit("getConnect",);
   console.log("we requested for socket register")
 
 
   // data= userId
   socket.on("setConnected", async (data) => {
-    await User.updateOne({ _id: data.userId },{$addToSet:{socketId:socket.id}})
-
+   
  socket.emit('setChatList', { chatlist: await getchatList(data.userId) });
 
 
