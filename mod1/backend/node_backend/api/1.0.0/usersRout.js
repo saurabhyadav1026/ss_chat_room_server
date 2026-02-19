@@ -46,6 +46,7 @@ try{
 await googleAuthVerification(res,req.body.token)
 }
 catch(err){
+  console.log("sbhyd  your error :---- \n")
   console.log(err);
   res.status(401).json({status:false})
 }
@@ -140,29 +141,9 @@ res.json({status:true,data:user})
 export default usersRoute;
 
 
-const isUserAvailble = async (username) => {
-  
-  let value=true;
-
-    let users = await User.find({ "public_info.username": username  },{_id:1});
- 
-    if(users.length>0)value=false;
-  return value;
-}
 
 
 
-
-
-const createUsername=async(name)=>{
-
-  let username=name;
-  while(!(await isUserAvailble(name))){
-username=name+Math.floor(Math.random()*10000)
-
-  }
-return username;
-}
 
 
 

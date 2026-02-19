@@ -147,7 +147,7 @@ console.log("msg sended bhai")
 // do double tick
 
 socket.on("doDoubleTick",async(msgId)=>{
-   const {tickStatus,senderId,roomId}=await Message.findOneAndUpdate({_id:msgId},{$set:{'tickStatus.delivered':new Date()}});
+   const {tickStatus,senderId,roomId}=await Message.findOneAndUpdate  ({_id:msgId},{$set:{'tickStatus.delivered':new Date()}});
   let {socketId}=await User.findOne({_id:senderId},{socketId:1});
   socketId.forEach(async(s)=>{
     if(io.sockets.sockets.has(s)) io.to(s).emit("updateTick",{roomId:roomId,msgId:msgId,tickStatus:tickStatus})
@@ -155,7 +155,7 @@ socket.on("doDoubleTick",async(msgId)=>{
   })
 
 
-})
+}) 
 
 
 socket.on("doBlueTick",async(msgId)=>{

@@ -1,7 +1,7 @@
 import { generateAccessToken, generateRefreshToken } from '../../security/loggin/tokens/generateToken.js';
 
 
-const setLogged=(res,user)=>{
+const setLogged=(res,user,isNewUser)=>{
 
 
   const access_token=generateAccessToken({_id:user._id});
@@ -25,7 +25,7 @@ const _user={
     })
 
 
-  res.json({status:true, value:_user,accessToken:access_token});
+  res.json({status:true, isNewUser:isNewUser, value:_user,accessToken:access_token});
 
 
 }
