@@ -24,7 +24,7 @@ const _user={
       maxAge:30*24*60*60*1000,
     })
 
-
+console.log("we are setting you")
   res.json({status:true, isNewUser:isNewUser, value:_user,accessToken:access_token});
 
 

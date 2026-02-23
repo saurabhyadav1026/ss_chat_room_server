@@ -22,6 +22,9 @@ import bodyParser from 'body-parser'
 
 import { User, Message, Chat_Room } from './db/db/dbschema.js'
 import chatsocket from './socketcomuniation/chatsocket.js';
+import cookieParser from "cookie-parser";
+
+
 dotenv.config()
 
 // middleware setup
@@ -29,15 +32,26 @@ const app = express();
 const server = http.createServer(app);
 export const io = new Server(server, { cors: { origin: "*" } });
 
+
+
 io.on('connection',socket=>chatsocket(socket) );
+
+
 app.use(cors({
-  origin: "*",//"sspapp.netlify.app",
+  origin: process.env.FRONTEND_BASEURL,
   methods: ["GET", 'POST', "PUT", "DELETE"],
   credentials: true
 }));
+
 app.use(express.json());
+app.use(cookieParser());
 app.use(bodyParser.json()) 
+
+
 await connectDB();
+
+
+
 // middleware
 const storage = multer.memoryStorage(); // store file in memory as buffer
 const upload = multer({ storage });

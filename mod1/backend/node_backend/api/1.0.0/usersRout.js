@@ -41,8 +41,9 @@ usersRoute.get('/newuser', async (req, res) => {
 
 
 usersRoute.post("/googleAuthVerification",async(req,res)=>{
-
+ console.log("we start the authentication......")
 try{
+ 
 await googleAuthVerification(res,req.body.token)
 }
 catch(err){
