@@ -38,7 +38,7 @@ io.on('connection',socket=>chatsocket(socket) );
 
 
 app.use(cors({
-  origin: "*",           /* process.env.FRONTEND_BASEURL, */
+  origin:  process.env.FRONTEND_BASEURL, 
   methods: ["GET", 'POST', "PUT", "DELETE"],
   credentials: true
 }));
