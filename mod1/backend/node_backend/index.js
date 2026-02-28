@@ -23,6 +23,7 @@ import bodyParser from 'body-parser'
 import { User, Message, Chat_Room } from './db/db/dbschema.js'
 import chatsocket from './socketcomuniation/chatsocket.js';
 import cookieParser from "cookie-parser";
+import tokenVerification from './security/loggin/tokens/tokenVerification.js';
 
 
 dotenv.config()
@@ -30,7 +31,7 @@ dotenv.config()
 // middleware setup
 const app = express();
 const server = http.createServer(app);
-export const io = new Server(server, { cors: { origin: "*" } });
+export const io = new Server(server, { cors: { origin:  process.env.FRONTEND_BASEURL} });
 
 
 
@@ -62,6 +63,14 @@ app.get('/sbh/gen', async (req, res) => {
   res.json({ value: text })
 })
 
+app.get('/getuserbyid',async(req,res)=>{
+const {id}=req.query;
+
+const u=await User.findOne({_id:id},{public_info:1})
+
+return res.json(u.public_info);
+})
+
 
 app.post('/user/setdp', upload.single("image"), async (req, res) => {
   if (!req.file) res.status(400).send("file not found");
@@ -80,9 +89,9 @@ app.post('/user/setdp', upload.single("image"), async (req, res) => {
 )
 
 
-app.get('/get_authentiator', async (req, res) => {
-
-  res.json(MediaKit.getAuthenticationParameters());
+app.get('/get_authentiator',tokenVerification, async (req, res) => {
+console.log("verifyning imagkit")
+  res.status(200).json(MediaKit.getAuthenticationParameters());
 })
 
 

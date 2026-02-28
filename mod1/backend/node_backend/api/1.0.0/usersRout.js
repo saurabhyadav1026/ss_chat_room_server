@@ -5,16 +5,18 @@ import express from 'express';
 import {User} from '../../db/db/dbschema.js'
 
 import sendOtp from '../../mail/sendOtp.js';
-import { getChat, getsearchList, getChatsList } from './user.js';
+//import { getChat, getsearchList, getChatsList } from './user.js';
 import newUser from './new_user.js';
 
 import argon2 from 'argon2';
 
-
-import auth from '../../security/loggin/systemTokenAuth.js';
+  
 import googleAuthVerification from '../../security/loggin/googleAuthVerification.js';
 
 import setLogged from '../../security/loggin/setlogged.js';
+
+
+import tokenVerification from '../../security/loggin/tokens/tokenVerification.js'
 
 
 
@@ -88,14 +90,14 @@ usersRoute.get('/verifyuser', async (req, res) => {
 try { const u = await User.findOne({"public_info.username": req.query.username })
 
   if (u && await argon2.verify(u._doc.personal_info.password ,req.query.password)) {
-setLogged(res,u)
+setLogged(res,u,false )
 
 }
   
  else res.status(200).json({staus:false})}
  catch(err){
   console.log(err);
-  res.status(401).json({status:false})
+  res.status(403).json({status:false})
  }
 
 })
@@ -117,23 +119,18 @@ await sendOtp(req.query.email,res)
 
 
 
-usersRoute.post('/setdp',auth,async(req,res)=>{
+usersRoute.post('/setdp',tokenVerification ,async(req,res)=>{
+
+
 
   try{
-let u=await User.findOneAndUpdate({_id:req.body._id},{$set:{'public_info.dp':req.body.dpurl}})
-const user={
-    _id:u._id,
-    name:u.public_info.name,
-    username:u.public_info.username,
-    dp:req.body.dpurl,
-    about:u.public_info.about
-  }
- 
-res.json({status:true,data:user})
+let u=await User.updateOne({_id:req.user_id},{$set:{'public_info.dp':req.body.dpurl}})
+
+res.status(200).json({status:true})
   }
   catch(e){
     console.log(e)
-    res.json({status:false})
+    res.status(400).json({status:false})
   } 
 })
 
