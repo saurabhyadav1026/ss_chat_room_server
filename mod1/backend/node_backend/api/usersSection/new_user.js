@@ -1,7 +1,7 @@
 
 
-import { buffer } from 'stream/consumers';
-import {User} from '../../db/db/dbschema.js'
+//import { buffer } from 'stream/consumers';
+import  User from '../../db/db/models/user_model.js'
 
  const newUser=async({name,username,password,email})=> {
        

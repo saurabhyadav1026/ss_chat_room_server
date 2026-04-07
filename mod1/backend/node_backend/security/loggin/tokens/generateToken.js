@@ -7,7 +7,7 @@ export const generateAccessToken=(payloade)=>{
 return jwt.sign(
       {payloade:payloade},
     process.env.ACCESS_TOKEN_SECRET,
-    {expiresIn:"5m"}
+    {expiresIn:"60m"}
 )
 }
 

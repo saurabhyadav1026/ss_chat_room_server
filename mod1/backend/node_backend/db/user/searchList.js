@@ -1,10 +1,9 @@
 
-import { User } from "../db/dbschema.js";
+import  User  from "../db/models/user_model.js";
 
 
 const getSearchList = async (search_input) => {
-
-    console.log(search_input);
+    if(search_input=="")return [];
 
     let list = [];
 
@@ -16,6 +15,9 @@ const getSearchList = async (search_input) => {
                     { "public_info.name": { $regex: search_input, $options: "i" } }
                 ]
             },
+        },
+        {
+            $limit:5
         },
         {
             $project: {
@@ -30,8 +32,6 @@ const slist={}
   for( const x of list){
     slist[x._id]=x;
   }
-  console.log(slist)
-  console.log("ye slist")
     return slist;
 }
 

@@ -1,5 +1,4 @@
-import { Chat_Room, Message } from "../db/dbschema.js"
-
+import Message from "../db/models/message_model.js"
 
 export const doAllDoubleTick = async (reciverId) => {
 
@@ -23,8 +22,7 @@ export const doAllDoubleTick = async (reciverId) => {
     ])
 
     await Message.updateMany({ _id: { $in: list.map(m => m._id) } }, { $set: { 'tickStatus.delivered': new Date() } })
-    console.log(list)
-    console.log("sbhsoalldouble")
+
 }
 
 export const doAllBlueTick = async(reciverId, roomId) => {
@@ -33,6 +31,5 @@ export const doAllBlueTick = async(reciverId, roomId) => {
          senderId:{$ne:reciverId},
          'tickStatus.read':null
     },{$set:{'tickStatus.read':new Date()}})
-    console.log("bluetick done")
     return;
 }

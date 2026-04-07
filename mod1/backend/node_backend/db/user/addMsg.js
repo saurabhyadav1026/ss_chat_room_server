@@ -1,8 +1,9 @@
-import { Chat_Room, Message } from "../db/dbschema.js";
 
-/* 
+import Message from "../db/models/message_model.js";
 
+import mongoose from "mongoose";
 
+/*
 data={
 rooid,
 senderId
@@ -33,12 +34,16 @@ const nmsg={
    
 }
 
+console.log("nmsg is ::")
+console.log(nmsg)
+
 
 const {_id}=await new Message(nmsg).save();
 
 id= _id;
 }
-catch{
+catch(err){
+    console.log(err)
     status=false;
 }
    

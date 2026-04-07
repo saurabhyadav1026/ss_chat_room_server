@@ -1,89 +1,127 @@
-import { Chat_Room } from "../db/dbschema.js";
-import { toObjId } from "../db/db.js";
-
+import Chat_Room from "../db/models/chat_room_model.js";
 
 const getChatsList = async (userId) => {
+
+
   let chatsList = []
   chatsList = await Chat_Room.aggregate([
 
-    // to find all rooms by checking existing of userId in members list.
-    {
-      $match: {
-        "members": userId,
-        roomType: "personal_chat",
-      },
-    },
+    { $match: { members: userId } },
 
 
-    // convert string IDs → ObjectId
-    {
-      $addFields: {
-        unreadCountObj: {
-          $arrayElemAt: [{
-            $filter: {
-              input: "$members",
-              as: "m",
-              cond: { $eq: ['$$m', userId] }
-            }
-          }
-            , 0]
-        },
-
-
-
-        reciversObjId: {
-          // change the string id into obj id for lookup local field
-          $map: {
-            input: {
-              // find only reciver id 
-              $filter: {
-                input: "$members",
-                as: 'm',
-                cond: { $ne: ['$$m', userId] }
-              }
-            },
-            as: "m",
-            in: { $toObjectId: '$$m' }
-          },
-
-        }
-
-
-      },
-
-    },
-
+    // to get receiver
     {
       $lookup: {
         from: "users",
-        localField: "reciversObjId",
-        foreignField: "_id",
-        as: "receivers",
+
+        let: {
+          receiverId: {
+            $arrayElemAt: [{
+              $filter: {
+                input: "$members",
+                as: "m",
+                cond: { $ne: ["$$m" ,userId] }
+              }
+            }, 0]
+          }
+        },
+
+        pipeline: [
+          {
+            $match: { $expr: { $eq: [{$toString:"$_id"}, "$$receiverId"] } }     // for getting stage variable value we use $$ , and $ for current doc value
+          },
+          {
+
+            $project: {
+              _id: "$_id",
+              dp: "$public_info.dp",
+              username: "$public_info.username",
+              name: "$public_info.name"
+
+            }
+          }
+        ],
+        as: "receiver"
+      }
+
+
+
+    },
+
+
+
+
+
+    // to get last message
+
+
+    {
+      $lookup: {
+        from: "messages",
+        let: { roomId: "$_id" },
+        pipeline: [
+          { $match: { $expr:{$eq:["$roomId", {$toString:"$$roomId"}] } }},
+          { $sort: { _id: -1 } },
+          { $limit: 1 },
+          {$addFields:{
+            text:{$arrayElemAt:[
+              {$filter:{
+                input:"$texts",
+                as:"t",
+                cond:{$eq:["$$t.memberId",userId]}
+              }}
+
+            ,0]}
+          }},
+          {$project:{
+            _id:1,
+            senderId:1,
+            text:{$ifNull:["$text.text","nan"]}
+
+          }
+            
+          }
+
+        ],
+        as: "lastMessage"
+
       }
     },
-    { $addFields: { receiver: { $arrayElemAt: ['$receivers', 0] } } },
+
+
+    {
+
+      $addFields: {
+        receiver: {$arrayElemAt:["$receiver", 0]},
+        lastMessage: {$arrayElemAt:["$lastMessage", 0]}
+      }
+    },
+
+    // project for sending data
 
     {
       $project: {
         _id: 1,
-        members: 1,
-        unreadCount: '$unreadCountObj.unreadCount',
-        name: "$receiver.public_info.name",
-        roomName: "$receiver.public_info.username",
-        roomDP: "$receiver.public_info.dp",
-        
-      },
-    },
-  ]);
-  
+        receiver: 1,
+        lastMessage: 1
 
- 
-  const list={}
-for( const chat of chatsList){
-list[chat._id]=chat
-}
-  
 
+      }
+    }
+
+  ])
+
+
+
+
+
+  const list = {}
+  for (const chat of chatsList) {
+    list[chat._id] = chat
+  }
+
+console.log("we send chatlist")
+console.log(list)
   return list
 }
 
@@ -94,72 +132,83 @@ export default getChatsList;
 
 
 
-
+// userId=receiver Id
 
 export const getchatRoom = async (userId, roomId) => {
- 
-
-  let chatlist = [];
-
-  chatlist = await Chat_Room.aggregate([
-    {
-      $match: {
-        "members": userId,
-        roomType: "personal_chat",
-        _id: toObjId(roomId),
-      },
-    },
-
-   
-    // convert string IDs → ObjectId
-    {
-      $addFields: {
-        
 
 
-        reciversObjId: {
-          // change the string id into obj id for lookup local field
-          $map: {
-            input: {
-              // find only reciver id 
-              $filter: {
-                input: "$members",
-                as: 'm',
-                cond: { $ne: ['$$m', userId] }
-              }
-            },
-            as: "m",
-            in: { $toObjectId: '$$m' }
-          },
-
-        }
+   let chatsList = []
+  chatsList = await Chat_Room.aggregate([
+{ $match: { $expr:{$eq:[roomId, {$toString:"$_id"}] } }},
 
 
-      },
-
-    },
-
+    // to get receiver
     {
       $lookup: {
         from: "users",
-        localField: "reciversObjId",
-        foreignField: "_id",
-        as: "receivers",
+
+        let: {
+          receiverId: {
+            $arrayElemAt: [{
+              $filter: {
+                input: "$members",
+                as: "m",
+                cond: { $ne: ["$$m" ,userId] }
+              }
+            }, 0]
+          }
+        },
+
+        pipeline: [
+          {
+            $match: { $expr: { $eq: [{$toString:"$_id"}, "$$receiverId"] } }     // for getting stage variable value we use $$ , and $ for current doc value
+          },
+          {
+
+            $project: {
+              _id: "$_id",
+              dp: "$public_info.dp",
+              username: "$public_info.username",
+              name: "$public_info.name"
+
+            }
+          }
+        ],
+        as: "receiver"
+      }
+
+
+
+    },
+
+    {
+
+      $addFields: {
+        receiver: {$arrayElemAt:["$receiver", 0]},
+       
       }
     },
-    { $addFields: { receiver: { $arrayElemAt: ['$receivers', 0] } } },
+
+    // project for sending data
 
     {
       $project: {
-        _id: 1,
-        members: 1,
-        name: "$receiver.public_info.name",
-        roomName: "$receiver.public_info.username",
-        roomDP: "$receiver.public_info.dp",
-       
-      },
-    },
-  ]);
+        receiver: 1 
+      }
+    }
 
-  return chatlist[0];
+  ])
+
+
+
+  if(chatsList.length==0)return {}
+  return chatsList[0];
+
+
+
+
+  
+  
+
+
 };

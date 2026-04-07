@@ -1,7 +1,7 @@
 
 
 import { OAuth2Client } from 'google-auth-library';
-import { User } from '../../db/db/dbschema.js';
+import  User  from '../../db/db/models/user_model.js';
 import setLogged from './setlogged.js';
 
 

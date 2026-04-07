@@ -19,11 +19,16 @@ import { Server } from 'socket.io';
 import http from 'http';
 
 import bodyParser from 'body-parser'
-
-import { User, Message, Chat_Room } from './db/db/dbschema.js'
+import User from './db/db/models/user_model.js'
 import chatsocket from './socketcomuniation/chatsocket.js';
 import cookieParser from "cookie-parser";
-import tokenVerification from './security/loggin/tokens/tokenVerification.js';
+import appTokenAuth from './security/loggin/tokens/appTokenAuth.js';
+import refreshTheToken from './security/loggin/tokens/refreshTheToken.js';
+
+import aiRouter from './api/aiSection/aiRouter.js';
+import sendOtp from './mail/sendOtp.js';
+import forgetPassword from './security/loggin/forgetPassword.js';
+import loggingRouter from './api/logging/logging_api.js';
 
 
 dotenv.config()
@@ -56,7 +61,12 @@ await connectDB();
 // middleware
 const storage = multer.memoryStorage(); // store file in memory as buffer
 const upload = multer({ storage });
-app.use('/users', usersRout);
+
+
+app.use('/users',appTokenAuth, usersRout);
+app.use('/logging',loggingRouter);
+app.use('/ai',aiRouter);
+
 
 app.get('/sbh/gen', async (req, res) => {
   let text = await getGenRes(req.query.req)
@@ -68,31 +78,41 @@ const {id}=req.query;
 
 const u=await User.findOne({_id:id},{public_info:1})
 
-return res.json(u.public_info);
+return res.status(200).send(u.public_info);
 })
 
 
-app.post('/user/setdp', upload.single("image"), async (req, res) => {
-  if (!req.file) res.status(400).send("file not found");
-  try {
-    await User.updateOne({ 'public_info.username': req.body.username }, { $set: { 'public_info.dp': { img: req.file.buffer, imgtype: req.file.mimetype }, }, });
+app.get("/refreshtoken",(req,res)=>{
 
-    /* const sett =new app_data({type:'default',data:{no_dp:{img:req.file.buffer,imgtype:req.file.mimetype}}});
-     await sett.save();
-     */
-    res.status(200).send("DP updated successfully!");
-  } catch (e) {
-    return res.status(400).send("No file uploaded");
-  }
-
-}
-)
+  refreshTheToken(req,res);
+});
 
 
-app.get('/get_authentiator',tokenVerification, async (req, res) => {
-console.log("verifyning imagkit")
+
+
+
+// for mediakit authentication
+app.get('/get_authentiator', async (req, res) => {
+
   res.status(200).json(MediaKit.getAuthenticationParameters());
 })
+
+app.get("/isuseravailble",async(req,res)=>{
+try {const val =await User.find({"public_info.username":req.query.username});
+  res.json({status:!val.length>0});
+}catch(err){
+  console.log(err);
+  res.json({status:false})
+}
+
+})
+app.get('/getotp',async(req,res)=>{
+
+await sendOtp(req.query.email,res)
+
+});
+
+
 
 
 

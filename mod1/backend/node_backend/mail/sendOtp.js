@@ -1,11 +1,12 @@
 
 import sender from './sender.js'
 import dotenv from 'dotenv'
-import { User } from '../db/db/dbschema.js'
+import  User  from '../db/db/models/user_model.js'
 
 dotenv.config()
 
 const sendOtp=async(user_mail,res)=>{
+    console.log("hello "+user_mail)
 
  const  checkuniqEmail=await User.find({"personal_info.email":user_mail.toLowerCase()}).collation({locale:'en',strength:2})
 
@@ -27,7 +28,7 @@ const otp_mail={
     html:"<h5> Your otp of code :<b> "+otp_code+"</b>   is: </h5><h1>  "+OTP+"</h1> </br></br> <h4>Thankyou</h4> "
 
 }
-console.log("we are sending mail")
+
  sender.sendMail(otp_mail,(err,info)=>{
     if(err){
         res.json({otp_code:null,otp:null,status:'Error! try again later.',err:err})

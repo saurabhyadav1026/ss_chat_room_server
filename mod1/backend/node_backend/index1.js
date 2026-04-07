@@ -20,7 +20,7 @@ import {Server} from 'socket.io';
 import http from 'http';
 
 import bodyParser from 'body-parser'
-import { sendMsg } from './api/1.0.0/user.js';
+import { sendMsg } from './api/usersSection/user.js';
 
 
 
