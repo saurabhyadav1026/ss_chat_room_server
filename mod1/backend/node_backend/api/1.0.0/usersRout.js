@@ -14,7 +14,7 @@ import { getMessages } from '../../db/user/getMessages.js';
   
 import googleAuthVerification from '../../security/loggin/googleAuthVerification.js';
 
-import setLogged, { getLogginedUser } from '../../security/loggin/setlogged.js';
+import setLogged, { getLogginedUser, setLoggetOut } from '../../security/loggin/setlogged.js';
 import getRoomByUserId, { getRoomIdByReceiverId } from '../../db/room-operations/get-room/getRoomByReceiverId.js';
 import getRoomByRoomId from '../../db/room-operations/get-room/getRoomByRoomId.js';
 import getRoomByReceiverId from '../../db/room-operations/get-room/getRoomByReceiverId.js';
@@ -164,8 +164,17 @@ console.log(room);
 
 
 usersRoute.post("/logoutme",(req,res)=>{
-  res.clearCookie("refreshToken");
+
+try{  
+  setLoggetOut(req,res);
   res.json({status:true})
+
+}
+catch(err){
+  console.log(err);
+  res.json({status:false})
+}
+
 })
 
 export default usersRoute;

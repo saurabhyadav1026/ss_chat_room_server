@@ -28,6 +28,19 @@ export default setLogged;
 
 
 
+export const setLoggetOut=(req,res)=>{
+
+  res.clearCookie("refreshToken",{
+    httpOnly:true,
+      sameSite:"None",
+      secure:true,
+      maxAge:30*24*60*60*1000,
+
+  });
+}
+
+
+
 export const getLogginedUser=async(req,res)=>{
   console.log("we will provide you loggined user")
 
