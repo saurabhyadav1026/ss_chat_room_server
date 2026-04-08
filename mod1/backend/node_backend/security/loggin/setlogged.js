@@ -13,7 +13,7 @@ const setLogged=(res,userId,isNewUser)=>{
 
   res.cookie("refreshToken",refresh_token,
     {httpOnly:true,
-      sameSite:"strict",
+      sameSite:"None",
       secure:true,
       maxAge:30*24*60*60*1000,
     })
