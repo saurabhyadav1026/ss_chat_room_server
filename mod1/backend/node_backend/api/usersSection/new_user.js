@@ -22,7 +22,6 @@ import  User from '../../db/db/models/user_model.js'
 
  
 
-  console.log("new user is addeddd nbro ......")
     }
 
 

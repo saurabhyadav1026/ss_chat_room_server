@@ -34,10 +34,6 @@ const nmsg={
    
 }
 
-console.log("nmsg is ::")
-console.log(nmsg)
-
-
 const {_id}=await new Message(nmsg).save();
 
 id= _id;

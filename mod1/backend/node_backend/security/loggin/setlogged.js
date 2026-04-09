@@ -5,7 +5,6 @@ import { generateAccessToken, generateRefreshToken } from '../../security/loggin
 const setLogged=(res,userId)=>{
 
 
-  //const access_token=generateAccessToken({_id:userId});
 
   const refresh_token=generateRefreshToken({_id:userId});
 
@@ -18,8 +17,7 @@ const setLogged=(res,userId)=>{
       maxAge:30*24*60*60*1000,
     })
 
-console.log("we are setting you")
-  res.json({status:true});
+ return {status:true}
 
 
 }
@@ -46,6 +44,8 @@ export const getLogginedUser=async(req,res)=>{
 
 try{  const user = await User.findOne({"_id": req.userId })
 
+  const access_token=generateAccessToken({_id:req.userId});
+
 const _user={
     _id:user._id,
     name:user.public_info.name,
@@ -54,7 +54,7 @@ const _user={
     about:user.public_info.about,
   }
 console.log(_user)
-res.status(200).json({status:true,user:_user});
+res.status(200).json({status:true,user:_user,token:access_token});
 
 }
 catch(err){

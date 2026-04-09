@@ -120,8 +120,6 @@ const getChatsList = async (userId) => {
     list[chat._id] = chat
   }
 
-console.log("we send chatlist")
-console.log(list)
   return list
 }
 

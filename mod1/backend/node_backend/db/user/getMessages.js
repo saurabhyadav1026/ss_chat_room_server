@@ -4,8 +4,6 @@ import Message from "../db/models/message_model.js";
 
 
 export const getMessages = async (userId, roomId) => {
-  console.log("msg   sbhhh")
-  console.log(userId)
 
     let chats = [];
     let status = true;
@@ -50,8 +48,6 @@ for(const msg of chats){
     list[msg._id]=msg
 }
 
-console.log("mmm");
-console.log(list)
     return  list ;
 };
 

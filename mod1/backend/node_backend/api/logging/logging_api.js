@@ -33,18 +33,10 @@ loggingRouter.get('/newuser', async (req, res) => {
 
 
 loggingRouter.post("/googleAuthVerification",async(req,res)=>{
- console.log("we start the authentication......")
-try{
- 
-await googleAuthVerification(res,req.body.token)
-}
-catch(err){
-  console.log("sbhyd  your error :---- \n")
-  console.log(err);
-  res.status(401).json({status:false})
-}
 
+ console.log("we are aurthenbticaiong gpoog;le token")
 
+res.status(200).send(await googleAuthVerification(res,req.body.token))
 })
 
 
@@ -68,7 +60,6 @@ setLogged(res,u._id)
 
 
 loggingRouter.get("/forgetpassword",async (req,res)=>{
-    console.log("hello forget  "+ req.query.email)
 try{
    
   res.status(200).send({status:await forgetPassword(req.query.email.toLowerCase())})
@@ -98,9 +89,7 @@ loggingRouter.get("/setpassword",async (req,res)=>{
   let status=true;
     try{
 
-console.log("we will set your password")
 status= await resetPassword(token,req.query.password)
-   if(status) console.log("done")
     }
 catch(err){
     console.log(err);

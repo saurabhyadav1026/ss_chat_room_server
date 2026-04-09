@@ -40,8 +40,8 @@ export const verifyResetPasswordLink=async (token)=>{
     if(!token)return false;
 let status=true;
      jwt.verify(token, process.env.ACCESS_TOKEN_SECRET,(err,decoded)=>{
-        console.log("kya hai yrrr")
-        if(err){ console.log("koi gdbd hai");status= false}
+     
+        if(err){ console.log(err);status= false}
         else { console.log("link verified")};
     })
 return status;
@@ -53,7 +53,6 @@ export  const resetPassword=async(token,password)=>{
 
    let status=true;
  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET,async(err,decoded)=>{
-        console.log("kya hai yrrr")
         if(err){console.log(err);return false;}
         else {
          if(decoded.payloade._id) status=await setPassword(decoded.payloade._id,password);

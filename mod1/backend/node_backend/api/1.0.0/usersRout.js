@@ -59,14 +59,9 @@ try{  const {input}=req.query;
 })
 
 usersRoute.get("/getmessages",async(req,res)=>{
-  console.log("hum meaage de rhe hai")
 const userId=req.userId
   try{const roomId=req.query._id;
-  console.log("req queryyyy")
- console.log(req.query)
   const messages=await getMessages(userId,roomId);
-  console.log("mmmejkdsbnwkhekrfhrckuvhkufgvhukfdhnvnu")
-  console.log(messages)
     
   res.status(200).send({messages:messages});
 }catch(err){
@@ -97,12 +92,10 @@ catch(err){
 
 
 usersRoute.get("/verifyme",async(req,res)=>{
-  console.log("hiiiii")
 
   try {
- console.log("we send user");
   await getLogginedUser(req,res);
-  console.log(3545)
+
   }catch(err){
 
     res.status(420).send({status:false,user:{}})
@@ -123,7 +116,6 @@ usersRoute.get("/userprofile",async(req,res)=>{
        dp:user.public_info.dp,
        about:user.public_info.about,
      }
-   console.log(_user)
    res.status(200).json({status:true,user:_user});
    
    }
@@ -136,12 +128,9 @@ usersRoute.get("/userprofile",async(req,res)=>{
 
 
 usersRoute.get("/getroombyroomid",async(req,res)=>{
-  console.log("we will get room by ueser id");
   let room;
   if(req.query._id.slice(0,3)=="new"){
-    console.log("rrr tm to new person se chat krne ja rhe")
     room=await getRoomByReceiverId(req.userId,req.query._id.slice(3));
-  console.log(room)
   }
 
   else room=await getRoomByRoomId(req.userId,req.query._id);
@@ -154,7 +143,6 @@ console.log(room);
 
 
 usersRoute.get("/getroomidbyreceiverid",async(req,res)=>{
- console.log("we will get room by room id");
   const room=await getRoomIdByReceiverId(req.userId,req.query._id);
  
 console.log(room);

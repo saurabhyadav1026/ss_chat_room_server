@@ -6,8 +6,6 @@ import  User  from '../db/db/models/user_model.js'
 dotenv.config()
 
 const sendOtp=async(user_mail,res)=>{
-    console.log("hello "+user_mail)
-
  const  checkuniqEmail=await User.find({"personal_info.email":user_mail.toLowerCase()}).collation({locale:'en',strength:2})
 
   if(checkuniqEmail.length>0){

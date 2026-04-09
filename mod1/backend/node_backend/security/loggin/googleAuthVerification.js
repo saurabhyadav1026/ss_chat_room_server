@@ -10,6 +10,7 @@ const client=new OAuth2Client(process.env.GOOGLE_O_AUTH_CLINT_ID);
 const googleAuthVerification=async(res,token)=>{
 
   const ticket= await client.verifyIdToken({idToken:token,audience:process.env.GOOGLE_O_AUTH_CLINT_ID});
+  if(!ticket)return {status:false,msg:"ticket not verified"}
     const payloade=ticket.getPayload();
     
     
@@ -31,11 +32,9 @@ const googleAuthVerification=async(res,token)=>{
     }
   u= await (new User(us)).save();
     }
-   setLogged(res,u_id)
+   return setLogged(res,u._id)
 
   
-     
-    return ;
 }
 
 export default googleAuthVerification;

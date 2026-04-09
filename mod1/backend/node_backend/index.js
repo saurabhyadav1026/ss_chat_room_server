@@ -29,6 +29,7 @@ import aiRouter from './api/aiSection/aiRouter.js';
 import sendOtp from './mail/sendOtp.js';
 import forgetPassword from './security/loggin/forgetPassword.js';
 import loggingRouter from './api/logging/logging_api.js';
+import { socketIntegration } from './socketcomuniation/mainsocket.js';
 
 
 dotenv.config()
@@ -36,11 +37,9 @@ dotenv.config()
 // middleware setup
 const app = express();
 const server = http.createServer(app);
-export const io = new Server(server, { cors: { origin:  process.env.FRONTEND_BASEURL} });
 
 
-
-io.on('connection',socket=>chatsocket(socket) );
+export const  io=socketIntegration(server);
 
 
 app.use(cors({
@@ -119,5 +118,5 @@ await sendOtp(req.query.email,res)
 
 
 // start server 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5120;
 server.listen(port)
