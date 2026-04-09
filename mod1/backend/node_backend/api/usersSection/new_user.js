@@ -18,9 +18,9 @@ import  User from '../../db/db/models/user_model.js'
         }
       };
 
-const u_l= new User(user);
+  await ( new User(user)).save();
 
-  await u_l.save();
+ 
 
   console.log("new user is addeddd nbro ......")
     }

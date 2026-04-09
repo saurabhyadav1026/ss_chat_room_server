@@ -2,10 +2,10 @@ import User from '../../db/db/models/user_model.js';
 import { generateAccessToken, generateRefreshToken } from '../../security/loggin/tokens/generateToken.js';
 
 
-const setLogged=(res,userId,isNewUser)=>{
+const setLogged=(res,userId)=>{
 
 
-  const access_token=generateAccessToken({_id:userId});
+  //const access_token=generateAccessToken({_id:userId});
 
   const refresh_token=generateRefreshToken({_id:userId});
 
@@ -19,7 +19,7 @@ const setLogged=(res,userId,isNewUser)=>{
     })
 
 console.log("we are setting you")
-  res.json({status:true, isNewUser:isNewUser, accessToken:access_token});
+  res.json({status:true});
 
 
 }

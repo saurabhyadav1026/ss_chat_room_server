@@ -54,7 +54,7 @@ loggingRouter.get('/verifyuser', async (req, res) => {
 try { const u = await User.findOne({"public_info.username": req.query.username })
 
   if (u && await argon2.verify(u._doc.personal_info.password ,req.query.password)) {
-setLogged(res,u,false )
+setLogged(res,u._id)
 
 }
   

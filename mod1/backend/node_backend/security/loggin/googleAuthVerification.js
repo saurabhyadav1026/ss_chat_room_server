@@ -16,10 +16,9 @@ const googleAuthVerification=async(res,token)=>{
     
     
      let u= await User.findOne({"personal_info.email":payloade.email.toLowerCase()},{public_info:1})
-    let isNewUser=false;
+    
     if(!u){
     
-      isNewUser=true;
     const us={
       public_info:{
         name:payloade.name,
@@ -30,11 +29,9 @@ const googleAuthVerification=async(res,token)=>{
     email:payloade.email.toLowerCase()
       }
     }
-    const x= new User(us)
-    await x.save();
-    u= await User.findOne({"personal_info.email":payloade.email},{public_info:1})
+  u= await (new User(us)).save();
     }
-   setLogged(res,u,isNewUser)
+   setLogged(res,u_id)
 
   
      
