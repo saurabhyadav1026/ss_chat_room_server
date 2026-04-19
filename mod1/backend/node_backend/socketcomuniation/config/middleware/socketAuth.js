@@ -14,7 +14,6 @@ const socketAuth=(socket,next)=>{
         else {
 
           socket.userId=decoded.payloade._id;
- console.log("socket authentication successfull of user :  "+socket.userId);
  next();
 }
 

@@ -7,7 +7,6 @@ const setPassword=async(userId,password)=>{
 
    let status=true;
 
-console.log("we are setting password "+userId+ "     "+password)
 
 try{
    

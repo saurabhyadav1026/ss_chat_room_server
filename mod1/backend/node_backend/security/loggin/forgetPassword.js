@@ -8,12 +8,8 @@ import jwt from 'jsonwebtoken'
 const forgetPassword=async(email)=>{
 
 try{
-    console.log("hhhhhhh "+email)
     const {_id,public_info}= await User.findOne({"personal_info.email":email});
-    console.log(_id);
-    console.log(public_info)
     if(_id){
-        console.log(121)
         const token =jwt.sign(
           {payloade:{_id:_id}},
         process.env.ACCESS_TOKEN_SECRET,
@@ -42,7 +38,6 @@ let status=true;
      jwt.verify(token, process.env.ACCESS_TOKEN_SECRET,(err,decoded)=>{
      
         if(err){ console.log(err);status= false}
-        else { console.log("link verified")};
     })
 return status;
 }

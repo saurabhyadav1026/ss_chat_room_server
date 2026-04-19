@@ -8,9 +8,6 @@ import { getLastMessage } from "../../message-operations/getMessages.js";
 
 const getRooms=async(userId)=>{
 
-  console.log("userId   :"+userId  );
-    
-
 
   let chatsList = []
   chatsList = await Chat_Room.aggregate([

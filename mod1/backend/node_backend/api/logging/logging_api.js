@@ -34,7 +34,6 @@ loggingRouter.get('/newuser', async (req, res) => {
 
 loggingRouter.post("/googleAuthVerification",async(req,res)=>{
 
- console.log("we are aurthenbticaiong gpoog;le token")
 
 res.status(200).send(await googleAuthVerification(res,req.body.token))
 })
@@ -74,10 +73,7 @@ catch(err){
 loggingRouter.get("/verifyresetpasswordlink",async(req,res)=>{
 let val=false;
 
-   console.log(req.headers.authorization)
-   console.log(req.headers.authorization.split(" ")[1])
    val=await verifyResetPasswordLink(req.headers.authorization.split(" ")[1]);
-   console.log(val);
 res.status(200).send({status:val})
 
 })

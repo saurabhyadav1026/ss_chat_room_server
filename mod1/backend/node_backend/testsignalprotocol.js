@@ -74,14 +74,11 @@ const arrayBufferToBase64=(buffer) =>{
 
 
 io.on('connection',(socket)=>{
-  console.log(`user connected: ${socket.id}`);
   socket.emit("connection");
 
   socket.on('register', async(data) => {       
     
     const {username,storekey,bundle}=data;
-    console.log("registering...")
-    console.log(bundle)
 
 const public_bundle={
     registrationId:bundle.registrationId,
@@ -95,7 +92,6 @@ const public_bundle={
 
    await User.updateOne({"public_info.username":username},{$set:{"public_info.public_bundle":public_bundle,"personal_info.storekey":storekey}})
    
-console.log("registered")
   });
 
 
@@ -103,7 +99,6 @@ console.log("registered")
 
 socket.on('disconnect',()=>{
 users.delete([...users].find(([k, v]) => v === socket.id)?.[0]);
-console.log("disconncet")
 })
 
 
@@ -119,16 +114,11 @@ socket.on("sendMessage",(data)=>{
 
 
 socket.on("getCreateSession",async({sender,reciever})=>{
-  console.log("we prepare to send bundle")
  const data={
     sender:sender,
     reciever:reciever,
     recieverBundle: await getbundle(reciever)
   }
-  console.log("we going to send bundle")
-
-
-  console.log("checking bundle")
 
   socket.emit('createSession',data);
 })
@@ -146,13 +136,8 @@ await connectDB();
 
 
 const getbundle=async(username)=>{
-console.log("dffr")
 let public_bundle=await User.findOne({"public_info.username":username},{"public_info.public_bundle":1})
-console.log("public bundle")
 public_bundle=public_bundle.public_info.public_bundle;
-console.log(public_bundle)
-
-console.log("coverting public bundle to bndle")
 
   const bundle={
     registrationId:public_bundle.registrationId,
@@ -165,7 +150,6 @@ console.log("coverting public bundle to bndle")
 }
 
 
-console.log("send bund")
 
 return bundle;
 }

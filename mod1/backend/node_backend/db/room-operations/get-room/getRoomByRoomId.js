@@ -9,7 +9,7 @@ const getRoomByRoomId=async(userId,roomId)=>{
 
 
   if(!mongoose.Types.ObjectId.isValid(userId)){
-    console.log("invalid roomId ");return {};}
+   return {};}
 
        let chatsList = []
  try{     chatsList = await Chat_Room.aggregate([

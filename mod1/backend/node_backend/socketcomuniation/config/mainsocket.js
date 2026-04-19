@@ -11,7 +11,6 @@ import registerEvents from "./registerEvents.js";
     io.use(socketAuth);
 
     io.on("connection",async(socket)=>{
-console.log("sbh server socket connected  "+socket.userId);
 
 //to register socket events
 registerEvents(io,socket);
@@ -26,8 +25,6 @@ await setOnline(socket);
 
 
 socket.on("disconnect",()=>{
-
-console.log("sbh server socket disconnected  "+socket.userId)
 });
 
 

@@ -8,7 +8,6 @@ import Message from "../db/models/message_model.js";
 
 
  export const sendMessage=async(senderId,roomId,text)=>{
-console.log(text)
  try {   let tempMsg={
         senderId:senderId,
         text:text,

@@ -21,7 +21,6 @@ const setDoubleTick=async(socket)=>{
     Object.keys(update.updateRooms).forEach((roomId)=>{
    socket.to(roomId).emit("u/chats/updateDoubleTick",update)
     })
- console.log(update)
 
 }
 

@@ -8,9 +8,6 @@ import Chat_Room from "../../db/models/chat_room_model.js";
 
 const getRoomByReceiverId=async(userId,receiverId)=>{
 
-  console.log("userId   :"+userId   +"        receiverId = "+receiverId);
-    
-
 
   let chatsList = []
   chatsList = await Chat_Room.aggregate([
@@ -113,8 +110,6 @@ const getRoomByReceiverId=async(userId,receiverId)=>{
 if(chatsList.length==0)return getNewDummyRoom(receiverId);
 
 
-console.log("we send getten room")
-console.log(chatsList[0])
 
   return chatsList[0];
 

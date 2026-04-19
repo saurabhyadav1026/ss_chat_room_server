@@ -12,7 +12,6 @@ const getRoomsId=async(userId)=>{
         return rooms;
         
 }catch(err){
-    console.log("yrr ab yha error hai");
     console.log(err);
     return [];
 }

@@ -20,7 +20,6 @@ if(!req.cookies.refreshToken){res.status(200).send({ message: "Session Expire" }
             res.status(420).send({ message: "Session Expire" })
         }
         else {
-            console.log("token is refreshed")
 
           req.userId=decoded.payloade._id;
  next();

@@ -45,10 +45,7 @@ res.status(200).json({status:true})
 usersRoute.get("/searchlist",async(req,res)=>{
 
 try{  const {input}=req.query;
-  console.log(input)
- 
   let list=await getSearchList(input);
-  console.log(list)
   res.status(200).send(list)
 }catch(err){
   console.log(err);
@@ -108,8 +105,8 @@ usersRoute.get("/verifyme",async(req,res)=>{
 
 usersRoute.get("/userprofile",async(req,res)=>{
    
-   try{  const user = await User.findOne({"_id": req.query._id })
-   
+   try{  const user = await User.findOne({"public_info.username": req.query.username })
+   if(!user)return {}
    const _user={
        _id:user._id,
        name:user.public_info.name,

@@ -40,7 +40,6 @@ export const setLoggetOut=(req,res)=>{
 
 
 export const getLogginedUser=async(req,res)=>{
-  console.log("we will provide you loggined user")
 
 try{  const user = await User.findOne({"_id": req.userId })
 
@@ -53,7 +52,6 @@ const _user={
     dp:user.public_info.dp,
     about:user.public_info.about,
   }
-console.log(_user);
 
 res.status(200).json({status:true,user:_user,token:access_token});
 
