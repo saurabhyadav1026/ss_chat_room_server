@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import Chat_Room from "../../db/models/chat_room_model.js";
+import { getLastMessage } from "../../message-operations/getMessages.js";
 
 
 
@@ -80,6 +81,8 @@ const getRoomByRoomId=async(userId,roomId)=>{
     }
     
       if(chatsList.length==0)return {}
+      const room=chatsList[0];
+      room["lastMessage"]=await getLastMessage(userId,room._id)
       return chatsList[0];
     
     

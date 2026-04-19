@@ -4,20 +4,18 @@
 import express from 'express';
 import User  from '../../db/db/models/user_model.js'
 
-import sendOtp from '../../mail/sendOtp.js';
-
-import newUser from '../usersSection/new_user.js';
-import getChatsList,{getchatRoom} from '../../db/user/chatList.js';
+import getChatsList from '../../db/user/chatList.js';
 import getSearchList from '../../db/user/searchList.js';
 
-import { getMessages } from '../../db/user/getMessages.js';
-  
-import googleAuthVerification from '../../security/loggin/googleAuthVerification.js';
+import getMessages from "../../db/message-operations/getMessages.js"
 
 import setLogged, { getLogginedUser, setLoggetOut } from '../../security/loggin/setlogged.js';
 import getRoomByUserId, { getRoomIdByReceiverId } from '../../db/room-operations/get-room/getRoomByReceiverId.js';
 import getRoomByRoomId from '../../db/room-operations/get-room/getRoomByRoomId.js';
 import getRoomByReceiverId from '../../db/room-operations/get-room/getRoomByReceiverId.js';
+import getRooms from '../../db/room-operations/get-room/getRooms.js';
+import { doDoubleTick } from '../../db/message-operations/tickUpdate.js';
+import setDoubleTick from '../../socketcomuniation/socketOperations/setDoubleTick.js';
 
 
 
@@ -62,11 +60,11 @@ usersRoute.get("/getmessages",async(req,res)=>{
 const userId=req.userId
   try{const roomId=req.query._id;
   const messages=await getMessages(userId,roomId);
-    
-  res.status(200).send({messages:messages});
+    res.status(200).send({messages:messages});
+ 
 }catch(err){
   console.log(err)
-  res.status(320).send({})
+  res.status(320).send({status:false})
 }
 })
 
@@ -79,7 +77,10 @@ const userId=req.userId
 usersRoute.get("/getchatslist",async(req,res)=>{
 
 try{
-const list=await getChatsList(req.userId);
+ 
+
+const list=await getRooms(req.userId);
+
 res.status(200).send(list)
 }
 catch(err){
@@ -135,7 +136,6 @@ usersRoute.get("/getroombyroomid",async(req,res)=>{
 
   else room=await getRoomByRoomId(req.userId,req.query._id);
 
-console.log(room);
   res.status(200).send({room:room});
 
 })
@@ -145,7 +145,7 @@ console.log(room);
 usersRoute.get("/getroomidbyreceiverid",async(req,res)=>{
   const room=await getRoomIdByReceiverId(req.userId,req.query._id);
  
-console.log(room);
+
   res.status(200).send(room);
 
 })
@@ -164,6 +164,7 @@ catch(err){
 }
 
 })
+
 
 export default usersRoute;
 

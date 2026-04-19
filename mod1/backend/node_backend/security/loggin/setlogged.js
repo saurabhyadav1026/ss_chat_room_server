@@ -53,7 +53,8 @@ const _user={
     dp:user.public_info.dp,
     about:user.public_info.about,
   }
-console.log(_user)
+console.log(_user);
+
 res.status(200).json({status:true,user:_user,token:access_token});
 
 }

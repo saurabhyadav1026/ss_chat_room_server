@@ -59,30 +59,7 @@ const getChatsList = async (userId) => {
       $lookup: {
         from: "messages",
         let: { roomId: "$_id" },
-        pipeline: [
-          { $match: { $expr:{$eq:["$roomId", {$toString:"$$roomId"}] } }},
-          { $sort: { _id: -1 } },
-          { $limit: 1 },
-          {$addFields:{
-            text:{$arrayElemAt:[
-              {$filter:{
-                input:"$texts",
-                as:"t",
-                cond:{$eq:["$$t.memberId",userId]}
-              }}
-
-            ,0]}
-          }},
-          {$project:{
-            _id:1,
-            senderId:1,
-            text:{$ifNull:["$text.text","nan"]}
-
-          }
-            
-          }
-
-        ],
+       
         as: "lastMessage"
 
       }

@@ -25,7 +25,7 @@ import { type } from "node:os";
 const chat_room_schema = new mongoose.Schema({
 
   roomType:{type:String,default:"personal-chat"},
-  members: [{ type: String, ref: "User" }],
+  members: [{ type: String}],
 
 })
 

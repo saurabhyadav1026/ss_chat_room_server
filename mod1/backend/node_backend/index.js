@@ -14,23 +14,19 @@ import getGenRes from './controll/getGenRes.js';
 import multer from 'multer';
 
 
-// for socket
-import { Server } from 'socket.io';
+
 import http from 'http';
 
 import bodyParser from 'body-parser'
 import User from './db/db/models/user_model.js'
-import chatsocket from './socketcomuniation/chatsocket.js';
 import cookieParser from "cookie-parser";
 import appTokenAuth from './security/loggin/tokens/appTokenAuth.js';
 import refreshTheToken from './security/loggin/tokens/refreshTheToken.js';
 
 import aiRouter from './api/aiSection/aiRouter.js';
 import sendOtp from './mail/sendOtp.js';
-import forgetPassword from './security/loggin/forgetPassword.js';
 import loggingRouter from './api/logging/logging_api.js';
-import { socketIntegration } from './socketcomuniation/mainsocket.js';
-
+import { socketIntegration } from './socketcomuniation/config/mainsocket.js'
 
 dotenv.config()
 
