@@ -1,5 +1,5 @@
 import socketOperationSendMessage from "../socketOperations/sendMessage.js";
-import setBlueTick, { setOneBlueTick } from "../socketOperations/setBlueTIck.js";
+import setBlueTick, { setOneBlueTick } from "../socketOperations/setBlueTick.js";
 import setDoubleTick, { setOneDoubleTick } from "../socketOperations/setDoubleTick.js";
 
 // event declartion 
