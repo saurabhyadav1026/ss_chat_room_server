@@ -27,7 +27,7 @@ await Message.updateMany(
 );
 
 msgs.forEach((msg)=>{
-   if( updateRooms[msg.roomId])updateMsgsId[msg.roomId].push(msg._id.toString());
+   if( updateRooms[msg.roomId])updateRooms[msg.roomId].push(msg._id.toString());
     else updateRooms[msg.roomId]=[msg._id.toString()]
 })
 
