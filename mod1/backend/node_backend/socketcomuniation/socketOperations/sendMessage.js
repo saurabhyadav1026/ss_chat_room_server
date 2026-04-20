@@ -12,8 +12,8 @@ const socketOperationSendMessage = async (io, socket, data) => {
     if (roomId.slice(0, 3) == "new") {
         const res = await socketOperationNewRoom(io, socket, roomId.slice( 3));
         if (res.status) roomId = res.roomId;
-        else socket.emit("u/chats/messageNotSent", { _id: _id });
-        return;
+        else {socket.emit("u/chats/messageNotSent", { _id: _id });
+        return;}
     }
 
     let res = await sendMessage(socket.userId,roomId, text);
