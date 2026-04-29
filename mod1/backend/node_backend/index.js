@@ -35,7 +35,7 @@ const app = express();
 const server = http.createServer(app);
 
 
-export const  io=socketIntegration(server);
+const  io=socketIntegration(server);
 
 
 app.use(cors({
@@ -60,7 +60,7 @@ const upload = multer({ storage });
 
 app.use('/users',appTokenAuth, usersRout);
 app.use('/logging',loggingRouter);
-app.use('/ai',aiRouter);
+app.use('/ai',appTokenAuth,aiRouter);
 
 
 app.get('/sbh/gen', async (req, res) => {
