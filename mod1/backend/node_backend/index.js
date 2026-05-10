@@ -27,6 +27,8 @@ import aiRouter from './api/aiSection/aiRouter.js';
 import sendOtp from './mail/sendOtp.js';
 import loggingRouter from './api/logging/logging_api.js';
 import { socketIntegration } from './socketcomuniation/config/mainsocket.js'
+import match from './funChat/operation/match.js';
+import visitTracker from './security/privacy/visitTracker.js';
 
 dotenv.config()
 
@@ -63,10 +65,27 @@ app.use('/logging',loggingRouter);
 app.use('/ai',appTokenAuth,aiRouter);
 
 
+
+app.get('/newVisit',async(req,res)=>{
+await visitTracker(req,res)
+
+})
+
+
+
 app.get('/sbh/gen', async (req, res) => {
   let text = await getGenRes(req.query.req)
   res.json({ value: text })
 })
+
+app.get("/match",(req,res)=>{
+console.log("match reqqq")
+  res.send({room:match(req.query.me)})
+
+})
+
+
+
 
 app.get('/getuserbyid',async(req,res)=>{
 const {id}=req.query;

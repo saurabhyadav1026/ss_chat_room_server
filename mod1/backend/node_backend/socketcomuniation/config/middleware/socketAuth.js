@@ -9,7 +9,7 @@ const socketAuth=(socket,next)=>{
     if(!token) throw new Error("No Token");
     jwt.verify(token,process.env.ACCESS_TOKEN_SECRET, (error, decoded) => {
         if (error) {
-            throw error;
+           // throw error;
         }
         else {
 
@@ -21,7 +21,8 @@ const socketAuth=(socket,next)=>{
     })
 
      }catch(err){
-next(new Error("unauthorized"));
+//next(new Error("unauthorized"));
+next();
 
 }
 }

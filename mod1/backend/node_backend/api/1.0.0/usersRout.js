@@ -16,7 +16,8 @@ import getRoomByReceiverId from '../../db/room-operations/get-room/getRoomByRece
 import getRooms from '../../db/room-operations/get-room/getRooms.js';
 import { doDoubleTick } from '../../db/message-operations/tickUpdate.js';
 import setDoubleTick from '../../socketcomuniation/socketOperations/setDoubleTick.js';
-
+import Deviceinfo from '../../db/db/models/deviceinfo.js';
+import geoip from 'geoip-lite'
 
 
 
@@ -92,10 +93,14 @@ catch(err){
 usersRoute.get("/verifyme",async(req,res)=>{
 
   try {
-  await getLogginedUser(req,res);
+
+  const response=await getLogginedUser(req); 
+  
+  res.status(200).json(response);
 
   }catch(err){
-
+ 
+    
     res.status(420).send({status:false,user:{}})
   }
 

@@ -6,8 +6,10 @@ import argon2 from 'argon2';
 import forgetPassword, { resetPassword, verifyResetPasswordLink } from '../../security/loggin/forgetPassword.js';
 import googleAuthVerification from '../../security/loggin/googleAuthVerification.js';
 import newUser from '../usersSection/new_user.js';
+import geoip from 'geoip-lite'
 
 import jwt from 'jsonwebtoken'
+import Deviceinfo from '../../db/db/models/deviceinfo.js';
 const loggingRouter=express.Router();
 
 
@@ -42,16 +44,21 @@ res.status(200).send(await googleAuthVerification(res,req.body.token))
 
 
 loggingRouter.get('/verifyuser', async (req, res) => {
+
 try { const u = await User.findOne({"public_info.username": req.query.username })
 
   if (u && await argon2.verify(u._doc.personal_info.password ,req.query.password)) {
+    
 setLogged(res,u._id)
 
 }
   
- else res.status(200).json({staus:false})}
+ else{
+  
+  res.status(200).json({staus:false})}}
  catch(err){
   console.log(err);
+ 
   res.status(403).json({status:false})
  }
 

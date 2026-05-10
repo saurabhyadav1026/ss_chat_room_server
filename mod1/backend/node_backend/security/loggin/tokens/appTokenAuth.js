@@ -15,6 +15,8 @@ if(!req.cookies.refreshToken){res.status(200).send({ message: "Session Expire" }
 
     jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, (error, decoded) => {
         if (error) {
+
+            
             console.log(error)
             res.clearCookie("refreshToken");
             res.status(420).send({ message: "Session Expire" })
