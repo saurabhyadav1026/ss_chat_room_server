@@ -3,7 +3,7 @@ import socketAuth from "../middleware/socketAuth.js";
 import registerProtectedEvents from "../events-register/registerProtectedEvents.js";
 import setOnline from "../../events-operations/user-event-operations/setOnline.js";
 
-const connectUser=async (userIO)=>{
+const connectUser=(userIO)=>{
 userIO.use(socketAuth);
 
         userIO.on("connection",async(socket)=>{

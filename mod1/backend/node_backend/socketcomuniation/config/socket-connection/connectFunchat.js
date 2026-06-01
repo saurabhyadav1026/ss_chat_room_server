@@ -3,7 +3,7 @@ import registerPublicEvents from "../events-register/registerPublicEvents.js";
 
 
 
-const connectFunChat=async(funChatIO)=>{
+const connectFunChat=(funChatIO)=>{
 
 funChatIO.on("connection" ,(socket)=>{
 

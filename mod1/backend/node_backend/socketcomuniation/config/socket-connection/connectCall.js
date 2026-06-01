@@ -3,7 +3,7 @@
 
 
 
-const connectCall=async(callIO)=>{
+const connectCall=(callIO)=>{
 
 callIO.on("connection" ,(socket)=>{
 

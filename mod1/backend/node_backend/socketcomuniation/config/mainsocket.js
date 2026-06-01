@@ -21,9 +21,9 @@ import connectCall from "./socket-connection/connectCall.js";
     const callIO=io.of("/call")
 
 
-await connectFunChat(funChatIO);
-await connectUser(userIO)
-await connectCall(callIO)
+ connectFunChat(funChatIO);
+ connectUser(userIO)
+ connectCall(callIO)
 
 
     return {io:io,userIO:userIO,funChatIO:funChatIO};
