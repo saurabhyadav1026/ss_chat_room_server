@@ -21,8 +21,8 @@ const socketAuth=(socket,next)=>{
     })
 
      }catch(err){
-//next(new Error("unauthorized"));
-next();
+next(new Error("unauthorized"));
+
 
 }
 }

@@ -1,4 +1,4 @@
-import protectedEvents from "./events/protectedEvents.js";
+import protectedEvents from "../events/user-events.js";
 
 
 

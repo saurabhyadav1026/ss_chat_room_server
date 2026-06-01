@@ -1,5 +1,5 @@
+import newRoomId from "../../../db/room-operations/add-room/newRoom.js";
 
-import newRoomId from "../../db/room-operations/add-room/newRoom.js";
 
 
 const socketOperationNewRoom=async(io,socket,receiverId)=>{

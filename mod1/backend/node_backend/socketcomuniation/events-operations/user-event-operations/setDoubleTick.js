@@ -1,4 +1,4 @@
-import { doDoubleTick, doOneDoubleTick } from "../../db/message-operations/tickUpdate.js"
+import { doDoubleTick, doOneDoubleTick } from "../../../db/message-operations/tickUpdate.js"
 
 
 

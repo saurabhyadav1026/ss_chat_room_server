@@ -3,31 +3,42 @@
 
 import express from 'express';
 import User  from '../../db/db/models/user_model.js'
-
-import getChatsList from '../../db/user/chatList.js';
 import getSearchList from '../../db/user/searchList.js';
 
 import getMessages from "../../db/message-operations/getMessages.js"
-
-import setLogged, { getLogginedUser, setLoggetOut } from '../../security/loggin/setlogged.js';
-import getRoomByUserId, { getRoomIdByReceiverId } from '../../db/room-operations/get-room/getRoomByReceiverId.js';
 import getRoomByRoomId from '../../db/room-operations/get-room/getRoomByRoomId.js';
 import getRoomByReceiverId from '../../db/room-operations/get-room/getRoomByReceiverId.js';
 import getRooms from '../../db/room-operations/get-room/getRooms.js';
-import { doDoubleTick } from '../../db/message-operations/tickUpdate.js';
-import setDoubleTick from '../../socketcomuniation/socketOperations/setDoubleTick.js';
-import Deviceinfo from '../../db/db/models/deviceinfo.js';
-import geoip from 'geoip-lite'
-
+import { changeDP, updateMe } from '../../db/user-update/updateProfile.js';
+import { getLogginedUser } from '../../security/loggin/setlogged.js';
 
 
 const usersRoute = express.Router();
 
 
 
+usersRoute.get("/updateme",async (req,res)=>{
+  try{
+const result= await updateMe(req.userId,req.query.newname,req.query.newabout);
+res.status(200).send(result)
+  }
+  catch (err){
+    console.log(err)
+    req.status(200).send({status:false, msg:"error"})
+  }
+})
 
 
-
+usersRoute.get("/updatedp",async (req,res)=>{
+  try{
+const result= await changeDP(req.userId,req.query.newDP);
+res.status(200).send(result)
+  }
+  catch (err){
+    console.log(err)
+    req.status(200).send({status:false, msg:"error"})
+  }
+})
 
 usersRoute.post('/setdp' ,async(req,res)=>{
 
@@ -99,7 +110,7 @@ usersRoute.get("/verifyme",async(req,res)=>{
   res.status(200).json(response);
 
   }catch(err){
- 
+ console.log("verify me error")
     
     res.status(420).send({status:false,user:{}})
   }

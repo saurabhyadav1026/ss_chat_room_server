@@ -18,7 +18,6 @@ import multer from 'multer';
 import http from 'http';
 
 import bodyParser from 'body-parser'
-import User from './db/db/models/user_model.js'
 import cookieParser from "cookie-parser";
 import appTokenAuth from './security/loggin/tokens/appTokenAuth.js';
 import refreshTheToken from './security/loggin/tokens/refreshTheToken.js';
@@ -27,8 +26,8 @@ import aiRouter from './api/aiSection/aiRouter.js';
 import sendOtp from './mail/sendOtp.js';
 import loggingRouter from './api/logging/logging_api.js';
 import { socketIntegration } from './socketcomuniation/config/mainsocket.js'
-import match from './funChat/operation/match.js';
 import visitTracker from './security/privacy/visitTracker.js';
+import funChatRouter from './api/funChatAPI/funChatRouter.js';
 
 dotenv.config()
 
@@ -37,7 +36,7 @@ const app = express();
 const server = http.createServer(app);
 
 
-const  io=socketIntegration(server);
+const  io=socketIntegration(server);  
 
 
 app.use(cors({
@@ -50,50 +49,26 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.json()) 
 
-
+try{
 await connectDB();
 
 
-
-// middleware
-const storage = multer.memoryStorage(); // store file in memory as buffer
-const upload = multer({ storage });
 
 
 app.use('/users',appTokenAuth, usersRout);
 app.use('/logging',loggingRouter);
 app.use('/ai',appTokenAuth,aiRouter);
+app.use('/funchats',funChatRouter)
 
-
+ 
 
 app.get('/newVisit',async(req,res)=>{
 await visitTracker(req,res)
 
-})
+}) 
 
 
 
-app.get('/sbh/gen', async (req, res) => {
-  let text = await getGenRes(req.query.req)
-  res.json({ value: text })
-})
-
-app.get("/match",(req,res)=>{
-console.log("match reqqq")
-  res.send({room:match(req.query.me)})
-
-})
-
-
-
-
-app.get('/getuserbyid',async(req,res)=>{
-const {id}=req.query;
-
-const u=await User.findOne({_id:id},{public_info:1})
-
-return res.status(200).send(u.public_info);
-})
 
 
 app.get("/refreshtoken",(req,res)=>{
@@ -111,20 +86,31 @@ app.get('/get_authentiator', async (req, res) => {
   res.status(200).json(MediaKit.getAuthenticationParameters());
 })
 
-app.get("/isuseravailble",async(req,res)=>{
-try {const val =await User.find({"public_info.username":req.query.username});
-  res.json({status:!val.length>0});
-}catch(err){
-  console.log(err);
-  res.json({status:false})
-}
 
-})
 app.get('/getotp',async(req,res)=>{
 
 await sendOtp(req.query.email,res)
 
 });
+
+
+
+
+
+
+
+
+
+
+}catch(err){
+  console.log("DB not connected")
+}
+
+
+// middleware
+const storage = multer.memoryStorage(); // store file in memory as buffer
+const upload = multer({ storage });
+
 
 
 

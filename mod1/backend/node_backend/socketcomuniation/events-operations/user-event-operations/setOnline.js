@@ -1,4 +1,4 @@
-import getRoomsId from "../../db/room-operations/get-room/getRoomsId.js";
+import getRoomsId from "../../../db/room-operations/get-room/getRoomsId.js";
 import setDoubleTick from "./setDoubleTick.js";
 
 

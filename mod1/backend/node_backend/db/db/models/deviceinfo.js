@@ -13,7 +13,8 @@ const schema=mongoose.Schema({
         latitude:{type:String,default:null},
         longitude:{type:String,default:null},
         time:{type:Date,default:Date.now},
-        geoInfo:Object
+        ip:String,
+        device:String
     }],
   
 })

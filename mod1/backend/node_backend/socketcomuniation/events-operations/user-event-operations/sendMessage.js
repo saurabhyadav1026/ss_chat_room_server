@@ -1,7 +1,8 @@
-import { sendMessage } from "../../db/message-operations/sendMessage.js";
+import { sendMessage } from "../../../db/message-operations/sendMessage.js";
+import getRoomByRoomId from "../../../db/room-operations/get-room/getRoomByRoomId.js";
+
 import socketOperationNewRoom from "./newRoom.js";
 
-import getRoomByRoomId from "../../db/room-operations/get-room/getRoomByRoomId.js";
 
 
 

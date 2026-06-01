@@ -6,7 +6,6 @@ import jwt from 'jsonwebtoken'
 
 const appTokenAuth = (req, res, next) => {
 
-
 if(!req.cookies.refreshToken){res.status(200).send({ message: "Session Expire" });return;}
 
     
@@ -17,7 +16,7 @@ if(!req.cookies.refreshToken){res.status(200).send({ message: "Session Expire" }
         if (error) {
 
             
-            console.log(error)
+            console.log("jwt verification appauth error")
             res.clearCookie("refreshToken");
             res.status(420).send({ message: "Session Expire" })
         }
