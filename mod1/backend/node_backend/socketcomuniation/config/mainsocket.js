@@ -7,7 +7,13 @@ import connectCall from "./socket-connection/connectCall.js";
 
  export const socketIntegration=async(server)=>{
     console.log("we are here 4321")
-    const io = new Server(server, { cors: { origin: "*" }}  );//process.env.FRONTEND_BASEURL} });
+    const io = new Server(server, {
+  cors: {
+    origin: process.env.FRONTEND_BASEURL,
+    methods: ["GET", "POST"],
+    credentials: true
+  }
+} );
 
 
     const funChatIO=io.of("/funchat");
