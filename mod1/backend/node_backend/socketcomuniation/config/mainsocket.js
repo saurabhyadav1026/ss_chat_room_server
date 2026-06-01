@@ -9,7 +9,7 @@ import connectCall from "./socket-connection/connectCall.js";
     console.log("we are here 4321")
     const io = new Server(server, {
   cors: {
-    origin: process.env.FRONTEND_BASEURL,
+    origin:"*" , // process.env.FRONTEND_BASEURL,
     methods: ["GET", "POST"],
     credentials: true
   }
