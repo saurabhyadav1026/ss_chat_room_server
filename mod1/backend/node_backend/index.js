@@ -42,7 +42,7 @@ const  io=socketIntegration(server);
 app.use(cors({
   origin: process.env.FRONTEND_BASEURL, 
   methods: ["GET", 'POST', "PUT", "DELETE"],
-  //credentials: true
+  credentials: true
 }));
 
 app.use(express.json());

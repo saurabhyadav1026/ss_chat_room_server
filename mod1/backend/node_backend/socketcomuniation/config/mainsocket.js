@@ -11,7 +11,7 @@ import connectCall from "./socket-connection/connectCall.js";
   cors: {
     origin: process.env.FRONTEND_BASEURL,
     methods: ["GET", "POST"],
-   // credentials: true
+   credentials: true
   }
 } );
 
