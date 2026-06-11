@@ -12,7 +12,7 @@ console.log("wee will connect the users");
 registerProtectedEvents(userIO,socket);
 
 // to make user active for chat
-socket.join(socket.userId);
+
 await setOnline(socket);
 
 

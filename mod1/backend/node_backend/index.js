@@ -62,22 +62,18 @@ app.use('/funchats',funChatRouter)
 
  
 
+
+
 app.get('/newVisit',async(req,res)=>{
 await visitTracker(req,res)
 
 }) 
 
 
-
-
-
 app.get("/refreshtoken",(req,res)=>{
 
   refreshTheToken(req,res);
 });
-
-
-
 
 
 // for mediakit authentication
@@ -106,10 +102,6 @@ await sendOtp(req.query.email,res)
   console.log("DB not connected")
 }
 
-
-// middleware
-const storage = multer.memoryStorage(); // store file in memory as buffer
-const upload = multer({ storage });
 
 
 

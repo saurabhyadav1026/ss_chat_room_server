@@ -5,10 +5,14 @@ import setDoubleTick from "./setDoubleTick.js";
 
 
 const setOnline=async (socket)=>{
-   try{ const rooms=await getRoomsId(socket.userId);
-        socket.join(socket.userId);
+   try{
+    
+    socket.join(socket.userId);    // to join its id room
+
+    const rooms=await getRoomsId(socket.userId);            // get all connected chat room
+    
     rooms.forEach(room => {
-        socket.join(room._id.toString());    
+        socket.join(room._id.toString());                   //           join with chat room
     });
 
     // to do  double tick

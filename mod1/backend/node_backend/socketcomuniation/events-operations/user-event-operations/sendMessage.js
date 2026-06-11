@@ -8,10 +8,11 @@ import socketOperationNewRoom from "./newRoom.js";
 
 const socketOperationSendMessage = async (io, socket, data) => {
     
+    
     const { _id,  text } = data;
     let roomId=data.roomId;
     if (roomId.slice(0, 3) == "new") {
-        const res = await socketOperationNewRoom(io, socket, roomId.slice( 3));
+        const res = await socketOperationNewRoom(io, socket, roomId.slice(3));
         if (res.status) roomId = res.roomId;
         else {socket.emit("u/chats/messageNotSent", { _id: _id });
         return;}

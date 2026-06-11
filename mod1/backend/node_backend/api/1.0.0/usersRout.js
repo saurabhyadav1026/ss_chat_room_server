@@ -7,7 +7,7 @@ import getSearchList from '../../db/user/searchList.js';
 
 import getMessages from "../../db/message-operations/getMessages.js"
 import getRoomByRoomId from '../../db/room-operations/get-room/getRoomByRoomId.js';
-import getRoomByReceiverId from '../../db/room-operations/get-room/getRoomByReceiverId.js';
+import getRoomByReceiverId, { getRoomIdByReceiverId } from '../../db/room-operations/get-room/getRoomByReceiverId.js';
 import getRooms from '../../db/room-operations/get-room/getRooms.js';
 import { changeDP, updateMe } from '../../db/user-update/updateProfile.js';
 import { getLogginedUser } from '../../security/loggin/setlogged.js';
@@ -176,6 +176,41 @@ catch(err){
   res.json({status:false})
 }
 
+})
+
+
+
+
+usersRoute.get("/clearchat",(req,res)=>{
+
+  const {roomId}=req.query
+
+  res.send({status:true})
+})
+
+usersRoute.get("/lockchat",(req,res)=>{
+
+  const {roomId}=req.query
+    res.send({status:true})
+})
+
+usersRoute.get("/hidechat",(req,res)=>{
+
+  const {roomId}=req.query
+    res.send({status:true})
+})
+
+usersRoute.get("/blockuser",(req,res)=>{
+
+  const receiverId=req.query._id
+    res.send({status:true})
+})
+
+usersRoute.get("/reportuser",(req,res)=>{
+
+  const receiverId=req.query._id
+  console.log("user reported "+receiverId)
+    res.send({status:true})
 })
 
 
