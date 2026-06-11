@@ -1,3 +1,4 @@
+import getReceiverByRoomId from "../../../db/user/getReceiverByRoomId.js";
 
 
 
@@ -10,15 +11,18 @@ callIO.on("connection" ,(socket)=>{
 
 
 
-socket.on("joinroom",({roomId})=>{
-    socket.join(roomId);
-  
-    socket.emit("roomjoined",{roomId:roomId})
-})
 
-socket.on("offer",({roomId,offer})=>{
+
+socket.on("startcall",async({roomId,offer})=>{
+
+    console.log("offer hai")
+    console.log(offer)
+    const activeCall={
+        ...( await getReceiverByRoomId(socket.userId,roomId)),
+        roomId
+    }
    
-    socket.to(roomId).emit("offer",{offer:offer});
+    socket.to(roomId).emit("incomingcall",{activeCall,offer});
     })
 
 

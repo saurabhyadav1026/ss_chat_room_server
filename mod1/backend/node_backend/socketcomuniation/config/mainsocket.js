@@ -23,7 +23,7 @@ import connectCall from "./socket-connection/connectCall.js";
 
  connectFunChat(funChatIO);
  connectUser(userIO)
- connectCall(callIO)
+ connectCall(userIO)
 
 
     return {io:io,userIO:userIO,funChatIO:funChatIO};
