@@ -10,12 +10,20 @@ import getRoomByRoomId from '../../db/room-operations/get-room/getRoomByRoomId.j
 import getRoomByReceiverId, { getRoomIdByReceiverId } from '../../db/room-operations/get-room/getRoomByReceiverId.js';
 import getRooms from '../../db/room-operations/get-room/getRooms.js';
 import { changeDP, updateMe } from '../../db/user-update/updateProfile.js';
-import { getLogginedUser } from '../../security/loggin/setlogged.js';
+import { getLogginedUser, setLoggetOut } from '../../security/loggin/setlogged.js';
 
 
 const usersRoute = express.Router();
 
 
+
+/** 
+ * @swagger
+ * /users/updateme:
+ *   get:
+ *   summary: Update user profile information
+ *     description: Update the user's name and about information.
+ */
 
 usersRoute.get("/updateme",async (req,res)=>{
   try{
@@ -68,12 +76,14 @@ try{  const {input}=req.query;
 usersRoute.get("/getmessages",async(req,res)=>{
 const userId=req.userId
   try{const roomId=req.query._id;
-  const messages=await getMessages(userId,roomId);
-    res.status(200).send({messages:messages});
+  const messages=await getMessages(userId,roomId,req.query.cursor);
+  
+   if(messages.status) res.status(200).send({messages:messages.data});
+   else res.status(400).send({messages:"error"});
  
 }catch(err){
   console.log(err)
-  res.status(320).send({status:false})
+  res.status(401).send({status:false})
 }
 })
 
@@ -88,7 +98,7 @@ usersRoute.get("/getchatslist",async(req,res)=>{
 try{
  
 
-const list=await getRooms(req.userId);
+const list=await getRooms(req.userId, req.query.page);
 
 res.status(200).send(list)
 }
@@ -209,7 +219,6 @@ usersRoute.get("/blockuser",(req,res)=>{
 usersRoute.get("/reportuser",(req,res)=>{
 
   const receiverId=req.query._id
-  console.log("user reported "+receiverId)
     res.send({status:true})
 })
 

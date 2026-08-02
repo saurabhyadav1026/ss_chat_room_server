@@ -7,7 +7,6 @@ const connectUser=(userIO)=>{
 userIO.use(socketAuth);
 
         userIO.on("connection",async(socket)=>{
-console.log("wee will connect the users");
 
 registerProtectedEvents(userIO,socket);
 
@@ -16,8 +15,6 @@ registerProtectedEvents(userIO,socket);
 await setOnline(socket);
 
 
-
-console.log("public events registerd")
 //to register  protected socket events
 
    
@@ -34,8 +31,6 @@ console.log("public events registerd")
 
 
 socket.on("disconnect",()=>{
-
-console.log("user disconnected")
 });
 
 

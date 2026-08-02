@@ -43,7 +43,7 @@ const chatsocket = (socket) => {
   */
 
   socket.on("sendMessage", async (msg) => {
- 
+ console.log("message received")
 try{
     if (msg.roomId===null) {
       

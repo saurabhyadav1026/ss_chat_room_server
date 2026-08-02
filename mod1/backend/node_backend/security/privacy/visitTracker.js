@@ -4,7 +4,6 @@ import jwt from "jsonwebtoken";
 
 const visitTracker = async (req, res) => {
 
-    console.log("we will track you")
     const deviceId = req.query.deviceId;
 
   

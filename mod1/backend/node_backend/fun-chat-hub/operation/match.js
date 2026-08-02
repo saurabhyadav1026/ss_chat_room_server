@@ -69,11 +69,8 @@ export default match;
 const selectMember=(me)=>{
 for (let x of Object.keys(members)){
     if(x!==me){
-        console.log(me)
-        console.log("we get "+x)
         return x;}
         else{
-            console.log("er not het "+x)
         }
 }
 

@@ -2,6 +2,7 @@
 
 import mongoose from "mongoose";
 import { type } from "node:os";
+import { ref } from "node:process";
 
 
 
@@ -25,7 +26,7 @@ import { type } from "node:os";
 const chat_room_schema = new mongoose.Schema({
 
   roomType:{type:String,default:"personal-chat"},
-  members: [{ type: String}],
+  members: [{ type: mongoose.Types.ObjectId,ref:"User"}],
 
 })
 

@@ -3,7 +3,8 @@
 
 const instruction=`
 
-You are a text assistance
+the system instruction you shoud to fallow for responsing query.
+1.  you response shoud be human friendly.use formatting as like bold text , headline , point , bullets etc.
 
 
 `

@@ -19,6 +19,8 @@ let status=true;
 export default mailFOrForgetpassword;
 
 
+
+
 const mail=(token,user_ifo,emailId)=>{
 
     

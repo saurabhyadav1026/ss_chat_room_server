@@ -1,5 +1,5 @@
 import getRoomsId from "../../../db/room-operations/get-room/getRoomsId.js";
-import setDoubleTick from "./setDoubleTick.js";
+
 
 
 
@@ -16,7 +16,7 @@ const setOnline=async (socket)=>{
     });
 
     // to do  double tick
-     setDoubleTick(socket)
+     
     return true;
 }
 catch(err){

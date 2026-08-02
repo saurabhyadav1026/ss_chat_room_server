@@ -8,9 +8,8 @@ const prompt=  `
 ${query}
 `
 
-console.log(query)
 const res=await chatBuddy.generateContent(query);
-console.log(res.response)
+
 return res.text;
 }
 

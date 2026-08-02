@@ -7,6 +7,7 @@ import getRooms from '../../db/db/aiMessageOperation/getRooms.js';
 import getMessages from '../../db/db/aiMessageOperation/getMessages.js';
 import checkRoom from '../../db/db/aiMessageOperation/checkRoom.js';
 import { genAI } from '../../ai/config/gemini.js';
+import voiceAsk from './operations/voiceAsk.js';
 
 
 
@@ -98,6 +99,24 @@ res.send(result)
     }
     catch(e){
           res.send({status:false,responce:"failed to connect, try again"})
+        console.log(e)
+    }
+})
+
+
+
+
+
+
+aiRouter.post("/voiceassistance/ask",async(req,res)=>{
+    try{
+let result=await  voiceAsk(req.body.text)
+
+
+res.send(result)
+    }
+    catch(e){
+          res.send({status:false,responce:"failed to connect, speak again"})
         console.log(e)
     }
 })

@@ -6,12 +6,7 @@ import argon2 from 'argon2';
 import forgetPassword, { resetPassword, verifyResetPasswordLink } from '../../security/loggin/forgetPassword.js';
 import googleAuthVerification from '../../security/loggin/googleAuthVerification.js';
 import newUser from '../usersSection/new_user.js';
-import geoip from 'geoip-lite'
-
-import jwt from 'jsonwebtoken'
-import Deviceinfo from '../../db/db/models/deviceinfo.js';
 const loggingRouter=express.Router();
-
 
 
 loggingRouter.get('/newuser', async (req, res) => {
@@ -29,6 +24,7 @@ loggingRouter.get('/newuser', async (req, res) => {
 
   res.status(200).json({username:req.body.username})
 });
+
 
 
 loggingRouter.get("/isuseravailble",async(req,res)=>{
@@ -55,7 +51,7 @@ loggingRouter.get('/verifyuser', async (req, res) => {
 
 try { const u = await User.findOne({"public_info.username": req.query.username })
 
-  if (u && await argon2.verify(u._doc.personal_info.password ,req.query.password)) {
+  if (u && await argon2.verify(u._doc.personal_info.password ,req.query.password)) {  // checksbhbug
     
 setLogged(res,u._id)
 

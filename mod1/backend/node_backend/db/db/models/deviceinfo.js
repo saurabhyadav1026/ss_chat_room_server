@@ -9,7 +9,7 @@ const schema=mongoose.Schema({
    
 
     info:[{
-        userId:String,
+        userId:{type:mongoose.Types.ObjectId,ref:"User"},
         latitude:{type:String,default:null},
         longitude:{type:String,default:null},
         time:{type:Date,default:Date.now},

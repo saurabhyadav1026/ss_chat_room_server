@@ -4,15 +4,13 @@ import { getLastMessage } from "../../message-operations/getMessages.js";
 
 
 
+const getRooms=async(userId,page)=>{
+console.log(page)
 
-
-const getRooms=async(userId)=>{
-
-
-  let chatsList = []
-  chatsList = await Chat_Room.aggregate([
+  let chatsList = await Chat_Room.aggregate([
 
     { $match: { members:userId} },
+    
     {
       $addFields:{
         receiverId:{ $toObjectId:{
@@ -44,6 +42,7 @@ const getRooms=async(userId)=>{
     preserveNullAndEmptyArrays: true
   }
 },
+
 {
   $project:{
     _id:1,
@@ -52,13 +51,23 @@ const getRooms=async(userId)=>{
 }
   ]);
 
+
 const rooms={};
 await Promise.all(chatsList.map(async(room)=>{
 rooms[room._id.toString()]=room;
+
 rooms[room._id.toString()]["lastMessage"]=await getLastMessage(userId,room._id.toString());
 }))
 
-  return rooms;
+const roomsIdList=Object.keys(rooms);
+
+  return {
+    rooms,
+    roomsIdList,
+    nextPage:undefined,
+    hasMore:false
+
+  };
 
   
   

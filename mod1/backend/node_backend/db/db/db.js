@@ -11,6 +11,3 @@ export default connectDB;
 
 
 
-export const toObjId=(_id)=>{
-  return  new mongoose.Types.ObjectId(_id);
-}

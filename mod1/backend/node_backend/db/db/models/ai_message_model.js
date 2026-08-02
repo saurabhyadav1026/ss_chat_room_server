@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 
 
 const schema = mongoose.Schema({
-    roomId:String,
+    roomId:{type:mongoose.Types.ObjectId,ref:"Airoom"},
     query:String,
     response:String
 })

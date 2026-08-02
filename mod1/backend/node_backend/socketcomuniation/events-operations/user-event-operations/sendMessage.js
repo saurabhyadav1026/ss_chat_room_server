@@ -7,8 +7,7 @@ import socketOperationNewRoom from "./newRoom.js";
 
 
 const socketOperationSendMessage = async (io, socket, data) => {
-    
-    
+   try{ 
     const { _id,  text } = data;
     let roomId=data.roomId;
     if (roomId.slice(0, 3) === "new") {
@@ -32,7 +31,11 @@ const socketOperationSendMessage = async (io, socket, data) => {
         socket.emit("u/chats/messageNotSent", { _id: _id })
     }
 
-
+   }
+   catch(err){
+    console.log("sendMessage Error")
+    console.log(err)
+   }
 }
 
 

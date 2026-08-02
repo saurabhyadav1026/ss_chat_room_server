@@ -15,8 +15,7 @@ callIO.on("connection" ,(socket)=>{
 
 socket.on("startcall",async({roomId,offer})=>{
 
-    console.log("offer hai")
-    console.log(offer)
+
     const activeCall={
         ...( await getReceiverByRoomId(socket.userId,roomId)),
         roomId
@@ -32,7 +31,6 @@ socket.on("answer",({roomId,answer})=>{
     })
 
 socket.on("ice-candidate",({roomId,candidate})=>{
-      console.log("we gewt ice candidate  "+socket.id)
     socket.to(roomId).emit("ice-candidate",{candidate:candidate});
     })
 
@@ -45,7 +43,6 @@ socket.on("end-call",({roomId})=>{
 
 
 socket.on("disconnect",()=>{
-    console.log("funchat user disconnected")
 })
 
 }
