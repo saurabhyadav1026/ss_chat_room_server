@@ -126,12 +126,12 @@ export default getRoomByReceiverId;
 
 export const getNewDummyRoom=async(receiverId)=>{
 
-
+try{
 
 
 let user = await User.findOne({_id:receiverId},{_id:1,public_info:1})
     
-    if(!user)return {};
+    if(!user)return null;
           
    const room={
 
@@ -151,7 +151,11 @@ let user = await User.findOne({_id:receiverId},{_id:1,public_info:1})
        
       }
   return room;
-
+    }
+    catch(err){
+      console.log(err);
+      return null;
+    }
 }
 
 

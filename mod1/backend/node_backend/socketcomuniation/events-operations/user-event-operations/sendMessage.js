@@ -7,35 +7,39 @@ import socketOperationNewRoom from "./newRoom.js";
 
 
 const socketOperationSendMessage = async (io, socket, data) => {
-   try{ 
-    const { _id,  text } = data;
-    let roomId=data.roomId;
-    if (roomId.slice(0, 3) === "new") {
-        const res = await socketOperationNewRoom(io, socket, roomId.slice(3));
-        if (res.status) roomId = res.roomId;
-        else {socket.emit("u/chats/messageNotSent", { _id: _id });
-        return;}
+    try {
+        const { _id, text } = data;
+        let roomId = data.roomId;
+        if (roomId.slice(0, 3) === "new") {
+            const res = await socketOperationNewRoom(io, socket, roomId.slice(3));
+            if (res.status) roomId = res.roomId;
+            else {
+                socket.emit("u/chats/messageNotSent", { _id: _id });
+                return;
+            }
+        }
+
+        let res = await sendMessage(socket.userId, roomId, text);
+
+        if (res.status) {
+
+            const room = await getRoomByRoomId(socket.userId, roomId);
+
+            socket.to(room.receiver._id.toString()).emit("u/chats/receiveMsgNotify", { room: room, message: res.msg });
+             
+            socket.to(roomId).emit("u/chats/receiveMsg", { room: room, message: res.msg });        
+            socket.emit("u/chats/messageSent", { room: room, _id: _id, message: res.msg })
+          
+        }
+        else {
+            socket.emit("u/chats/messageNotSent", { _id: _id })
+        }
+
     }
-
-    let res = await sendMessage(socket.userId,roomId, text);
-
-    if (res.status) {
-
-        const room = await getRoomByRoomId(socket.userId, roomId);
-        
-        socket.to(roomId).emit("u/chats/receiveMsg", {room:room, message: res.msg });
-
-        socket.emit("u/chats/messageSent", {room:room, _id: _id, message: res.msg })
+    catch (err) {
+        console.log("sendMessage Error")
+        console.log(err)
     }
-    else {
-        socket.emit("u/chats/messageNotSent", { _id: _id })
-    }
-
-   }
-   catch(err){
-    console.log("sendMessage Error")
-    console.log(err)
-   }
 }
 
 

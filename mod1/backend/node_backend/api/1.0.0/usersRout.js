@@ -11,6 +11,7 @@ import getRoomByReceiverId, { getRoomIdByReceiverId } from '../../db/room-operat
 import getRooms from '../../db/room-operations/get-room/getRooms.js';
 import { changeDP, updateMe } from '../../db/user-update/updateProfile.js';
 import { getLogginedUser, setLoggetOut } from '../../security/loggin/setlogged.js';
+import { io } from '../../index.js';
 
 
 const usersRoute = express.Router();
@@ -157,9 +158,17 @@ usersRoute.get("/getroombyroomid",async(req,res)=>{
     room=await getRoomByReceiverId(req.userId,req.query._id.slice(3));
   }
 
-  else room=await getRoomByRoomId(req.userId,req.query._id);
-
-  res.status(200).send({room:room});
+  else {
+    room=await getRoomByRoomId(req.userId,req.query._id);
+  const socket = io.userIO.sockets.get(req.query.socketId);
+ 
+  socket.join(room._id.toString());
+  
+  }
+if(!room){
+  res.status(404).send({status:false,message:"Invalid room"});
+}
+  res.status(200).send({status:true,room:room});
 
 })
 

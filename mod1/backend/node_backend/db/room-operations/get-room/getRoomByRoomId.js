@@ -8,8 +8,7 @@ import { getLastMessage } from "../../message-operations/getMessages.js";
 const getRoomByRoomId=async(userId,roomId)=>{
 
 
-  if(!mongoose.Types.ObjectId.isValid(userId)){
-   return {};}
+  if(!mongoose.Types.ObjectId.isValid(userId)) return null;
 
        let chatsList = []
  try{     chatsList = await Chat_Room.aggregate([
@@ -80,7 +79,7 @@ const getRoomByRoomId=async(userId,roomId)=>{
 
     }
     
-      if(chatsList.length==0)return {}
+      if(chatsList.length==0)return null;
       const room=chatsList[0];
       room["lastMessage"]=await getLastMessage(userId,room._id)
       return chatsList[0];

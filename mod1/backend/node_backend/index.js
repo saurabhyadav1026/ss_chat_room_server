@@ -31,8 +31,8 @@ const app = express();
 const server = http.createServer(app);
  await connectDB();
 
-const io = socketIntegration(server);
-
+  export const io=socketIntegration(server);
+  
 
 app.use(cors({
   origin: process.env.FRONTEND_BASEURL,
