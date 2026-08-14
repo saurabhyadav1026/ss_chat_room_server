@@ -3,6 +3,7 @@ import express from 'express'
 import funRoom from '../socketcomuniation/events-operations/funchats-event-operations/room.js';
 
 import createFunRoom from '../controllers/funchat-controller/createFunRoom.js';
+import { deflateSync } from 'node:zlib';
 
 
 const funChatRouter = express.Router();
@@ -29,4 +30,8 @@ res.status(500).send({status:false,message:"Internal server issue"})
 funChatRouter.post("/createRoom",createFunRoom);
 
 export default funChatRouter;
+
+
+
+
 

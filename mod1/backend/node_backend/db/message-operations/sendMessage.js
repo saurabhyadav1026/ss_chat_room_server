@@ -1,7 +1,7 @@
 
 import Message from "../db/models/message_model.js";
 
-
+import mongoose from "mongoose";
 
 
 
@@ -9,9 +9,9 @@ import Message from "../db/models/message_model.js";
 
  export const sendMessage=async(senderId,roomId,text)=>{
  try {   let tempMsg={
-        senderId:senderId,
+        senderId:mongoose.Types.ObjectId(senderId),
         text:text,
-        roomId:roomId
+        roomId:mongoose.Types.ObjectId(roomId)
     }
 
     const msg=(await (new Message(tempMsg)).save());
