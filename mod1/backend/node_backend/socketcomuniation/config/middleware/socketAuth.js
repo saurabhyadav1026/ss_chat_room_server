@@ -6,10 +6,8 @@ const socketAuth=(socket,next)=>{
 
    try {
     const token=  socket.handshake.auth.token;
-    if(!token) throw new Error("No Token");
-    jwt.verify(token,process.env.ACCESS_TOKEN_SECRET, (error, decoded) => {
+    if(token)jwt.verify(token,process.env.ACCESS_TOKEN_SECRET, (error, decoded) => {
         if (error) {
-       console.log(error)
         }
         else {
 
@@ -21,7 +19,7 @@ const socketAuth=(socket,next)=>{
     })
 
      }catch(err){
-      console.log(err)
+      console.error(err)
 
 
 

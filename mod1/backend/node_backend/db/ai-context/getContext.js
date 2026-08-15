@@ -28,7 +28,7 @@ const getContext=async (queryEmbedding,limit=3)=>{
     )
 return res;}
 catch(e){
-    console.log(e);
+    console.error(e);
     return "";
 }
 

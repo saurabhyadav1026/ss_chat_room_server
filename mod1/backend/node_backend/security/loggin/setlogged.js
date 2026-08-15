@@ -58,7 +58,7 @@ return {status:true,user:_user,token:access_token}
 
 }
 catch(err){
-  console.log(err);
+  console.error(err);
   
 }
 

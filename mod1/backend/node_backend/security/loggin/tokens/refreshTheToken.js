@@ -10,7 +10,7 @@ const refreshTheToken=(req,res)=>{
     
     jwt.verify(token,process.env.REFRESH_TOKEN_SECRET,(error,decoded)=>{
 if(error){
-    console.log(error)
+    console.error(error)
 res.status(420).send({message:"Session Expire"})
 }
 else{

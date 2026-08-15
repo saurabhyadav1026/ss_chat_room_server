@@ -10,11 +10,11 @@ const funChatRouter = express.Router();
 
 
 funChatRouter.get("/isroomcodeexist",(req,res)=>{
-    console.log(req.query.roomCode)
+ 
     const funRoom_= funRoom.roomBox.get(req.query.roomCode);
-    console.log(funRoom_)
+   
   try{  if(!funRoom_){
-    console.log("ye hua")
+   
         res.status(200).send({status:false});
         return;
        
@@ -22,7 +22,7 @@ funChatRouter.get("/isroomcodeexist",(req,res)=>{
     else  res.status(200).send({status:true});
 }
 catch(err) {
-console.log(err);
+console.error(err);
 res.status(500).send({status:false,message:"Internal server issue"})
 }
 })

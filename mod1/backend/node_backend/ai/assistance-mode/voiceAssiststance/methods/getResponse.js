@@ -31,11 +31,6 @@ return (await response.json()).response;
 
 }
 
- */
-
-
-
-
 
 
 const getResponse=async (query)=>{
@@ -48,4 +43,31 @@ const res=await voiceAssistanceModel.generateContent(prompt);
 return res.text;
 
 } 
+ */
+
+
+///
+
+
+const getResponse=async (query)=>{
+   
+try{
+const prompt=` I am using you as a voice assistance. so givve only the answer whch browwser     speechsynthises can easily pronounce the answer which question is below . and answewr should be short.
+* Do not use markdown language.
+*use symbol prooperly like  ',' , '.' , '"' etc.
+Question: ${query }
+`
+const res=await voiceAssistanceModel(prompt);
+const response = res.text;
+ return response;
+}catch(err){
+    console.error(err)
+    return "Your Free limit is Exceeded."
+}
+
+
+
+}
+
+
 export default getResponse;

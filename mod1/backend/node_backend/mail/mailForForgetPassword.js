@@ -9,7 +9,7 @@ let status=true;
 
     sender.sendMail(mail(userId,userInfo,emailId),(err,info)=>{
         if(err){
-            console.log(err);
+            console.error(err);
             status=false;
         }
     })

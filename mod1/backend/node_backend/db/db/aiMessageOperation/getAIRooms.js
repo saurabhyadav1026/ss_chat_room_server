@@ -2,7 +2,7 @@ import Airoom from "../models/ai_room_model.js"
 
 
 
-const getRooms=async(userId)=>{
+const getAIRooms=async(userId)=>{
 
     const rooms=await Airoom.find({userId:userId});
     const rs={};
@@ -12,4 +12,4 @@ const getRooms=async(userId)=>{
     return rs;
 }
 
-export default getRooms;
+export default getAIRooms;

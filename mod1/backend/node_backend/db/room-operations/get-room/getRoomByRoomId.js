@@ -5,7 +5,7 @@ import { getLastMessage } from "../../message-operations/getMessages.js";
 
 
 
-const getRoomByRoomId=async(userId,roomId)=>{
+const getRoomByRoomId_=async(userId,roomId)=>{
 
 
   if(!mongoose.Types.ObjectId.isValid(userId)) return null;
@@ -75,7 +75,7 @@ const getRoomByRoomId=async(userId,roomId)=>{
     
     }
     catch(err){
-      console.log(err)
+      console.error(err)
 
     }
     
@@ -94,4 +94,34 @@ const getRoomByRoomId=async(userId,roomId)=>{
 
 
 }
+
+
+
+const getRoomByRoomId=async(userId,roomId)=>{
+try
+{const room_ =await Chat_Room.findById(new mongoose.Types.ObjectId(roomId)) .populate({
+    path: 'members',
+    match: { _id: { $ne: new mongoose.Types.ObjectId(userId) } }, // exclude current user
+    select: '_id public_info.dp public_info.username public_info.name'    // projection
+  });
+
+return {
+  _id:room_._id,
+  receiver:{_id:room_.members[0]._id,...room_.members[0].public_info},
+  lastMessage:await getLastMessage(userId,roomId)
+}
+}
+catch(err){
+  console.error(err);
+  return null;
+}
+
+}
+
+
 export default getRoomByRoomId;
+
+
+
+
+

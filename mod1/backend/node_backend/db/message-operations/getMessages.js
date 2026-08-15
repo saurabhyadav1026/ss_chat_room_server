@@ -36,7 +36,7 @@ const messagesIdList=Object.keys(messages);
 }  
 }
 catch(err){
-    console.log(err);
+    console.error(err);
     return {status:false}
 }
 
@@ -50,7 +50,7 @@ if(msg.length==0)return {}
  return msg[0]
  }
  catch(err){
-  console.log(err);
+  console.error(err);
   return {}
  }
 

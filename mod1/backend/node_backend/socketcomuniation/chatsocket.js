@@ -43,7 +43,6 @@ const chatsocket = (socket) => {
   */
 
   socket.on("sendMessage", async (msg) => {
- console.log("message received")
 try{
     if (msg.roomId===null) {
       
@@ -103,7 +102,7 @@ try{
 
 })
 }catch(err){
-      console.log(err)
+      console.error(err)
     }
     
   })  
@@ -126,7 +125,7 @@ try{
   } )
   }
  catch(err){
-    console.log(err)
+    console.error(err)
   }
 
 
@@ -143,7 +142,7 @@ socket.on("doBlueTick",async(msgId)=>{
   })
 }
 catch(err){
-  console.log(err)
+  console.error(err)
 }
 
 })
@@ -155,7 +154,7 @@ catch(err){
    try{ await User.updateOne({socketId:{$in:[socket.id]}},{$pull:{socketId:socket.id}})
 }
 catch(err){
-  console.log(err)
+  console.error(err)
 }
     
    })
@@ -164,7 +163,7 @@ catch(err){
 
    try{ await User.updateOne({socketId:{$in:[socket.id]}},{$pull:{socketId:socket.id}})
 }catch(err){
-  console.log(err)
+  console.error(err)
 
 }
     

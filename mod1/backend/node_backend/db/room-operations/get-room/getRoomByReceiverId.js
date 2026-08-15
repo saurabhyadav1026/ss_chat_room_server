@@ -153,7 +153,7 @@ let user = await User.findOne({_id:receiverId},{_id:1,public_info:1})
   return room;
     }
     catch(err){
-      console.log(err);
+      console.error(err);
       return null;
     }
 }
@@ -166,7 +166,7 @@ try{const room = await Chat_Room.findOne({ members:{$all:[ userId ,receiverId],$
 if(room)return {status:true,roomId:room._id};
 else return{staus:true,roomId:"new"+receiverId}
 }catch(err){
-  console.log(err);
+  console.error(err);
 
 }
 return {status:false};

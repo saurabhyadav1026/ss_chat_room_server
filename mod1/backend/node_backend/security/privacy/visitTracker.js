@@ -22,7 +22,7 @@ const visitTracker = async (req, res) => {
 
         jwt.verify(req.cookies.refreshToken, process.env.REFRESH_TOKEN_SECRET, (error, decoded) => {
             if (error) {
-                console.log("jwt visit trackor error")
+                console.err(error)
             }
             else {
 
@@ -51,7 +51,7 @@ const visitTracker = async (req, res) => {
             res.send({ status: true, newDevice: false })
         } catch (err) {
             res.send({ status: false, newDevice: false })
-            console.log("visit error")
+            console.error("visit error  : "+ err)
         }
 
 

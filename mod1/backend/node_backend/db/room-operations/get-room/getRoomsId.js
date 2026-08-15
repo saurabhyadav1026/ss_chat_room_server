@@ -12,7 +12,7 @@ const getRoomsId=async(userId)=>{
         return rooms;
         
 }catch(err){
-    console.log(err);
+    console.error(err);
     return [];
 }
 

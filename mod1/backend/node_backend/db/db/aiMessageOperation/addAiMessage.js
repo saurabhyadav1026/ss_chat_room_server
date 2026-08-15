@@ -7,7 +7,7 @@ const addAiMessage=async (query,response,roomId)=>{
    return await Aimessage.create({
 query,
 response,
-roomId:mongoose.Types.ObjectId(roomId)
+roomId:new mongoose.Types.ObjectId(roomId)
    })
 
 

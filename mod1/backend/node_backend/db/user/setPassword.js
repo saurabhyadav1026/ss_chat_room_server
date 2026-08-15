@@ -15,7 +15,7 @@ try{
 
   
 }catch(err){
-    console.log(err);
+    console.error(err);
     status=false;
 }
 

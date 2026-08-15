@@ -32,7 +32,7 @@ const result= await updateMe(req.userId,req.query.newname,req.query.newabout);
 res.status(200).send(result)
   }
   catch (err){
-    console.log(err)
+    console.error(err)
     req.status(200).send({status:false, msg:"error"})
   }
 })
@@ -44,7 +44,7 @@ const result= await changeDP(req.userId,req.query.newDP);
 res.status(200).send(result)
   }
   catch (err){
-    console.log(err)
+    console.error(err)
     req.status(200).send({status:false, msg:"error"})
   }
 })
@@ -57,7 +57,7 @@ let u=await User.updateOne({_id:req.user_id},{$set:{'public_info.dp':req.body.dp
 res.status(200).json({status:true})
   }
   catch(e){
-    console.log(e)
+    console.error(e)
     res.status(400).json({status:false})
   } 
 })
@@ -69,7 +69,7 @@ try{  const {input}=req.query;
   let list=await getSearchList(input);
   res.status(200).send(list)
 }catch(err){
-  console.log(err);
+  console.error(err);
 
 }
 })
@@ -83,7 +83,7 @@ const userId=req.userId
    else res.status(400).send({messages:"error"});
  
 }catch(err){
-  console.log(err)
+  console.error(err)
   res.status(401).send({status:false})
 }
 })
@@ -104,7 +104,7 @@ const list=await getRooms(req.userId, req.query.page);
 res.status(200).send(list)
 }
 catch(err){
-  console.log(err)
+  console.error(err)
 }
 
 })
@@ -121,7 +121,7 @@ usersRoute.get("/verifyme",async(req,res)=>{
   res.status(200).json(response);
 
   }catch(err){
- console.log("verify me error")
+ console.error("verify me error : "+err)
     
     res.status(420).send({status:false,user:{}})
   }
@@ -145,7 +145,7 @@ usersRoute.get("/userprofile",async(req,res)=>{
    
    }
    catch(err){
-     console.log(err);
+     console.error(err);
      res.status(421).send({staus:false})
    }
 })
@@ -191,7 +191,7 @@ try{
 
 }
 catch(err){
-  console.log(err);
+  console.error(err);
   res.json({status:false})
 }
 

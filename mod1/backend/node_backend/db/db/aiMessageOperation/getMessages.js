@@ -12,7 +12,7 @@ try{
 
     return {status:true,messages:msgs}
 }catch(err){
-    console.log(err)
+    console.error(err)
 }
 
 }

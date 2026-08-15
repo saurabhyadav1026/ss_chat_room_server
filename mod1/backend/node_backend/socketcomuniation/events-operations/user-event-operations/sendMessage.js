@@ -23,12 +23,14 @@ const socketOperationSendMessage = async (io, socket, data) => {
 
         if (res.status) {
 
-            const room = await getRoomByRoomId(socket.userId, roomId);
-
-            socket.to(room.receiver._id.toString()).emit("u/chats/receiveMsgNotify", { room: room, message: res.msg });
+            const sender_room = await getRoomByRoomId(socket.userId, roomId);
+              const receiver_room = await getRoomByRoomId(sender_room.receiver._id.toString(), roomId);
+          
+            
+            socket.to(sender_room.receiver._id.toString()).emit("u/chats/receiveMsgNotify", { room: receiver_room, message: res.msg });
              
-            socket.to(roomId).emit("u/chats/receiveMsg", { room: room, message: res.msg });        
-            socket.emit("u/chats/messageSent", { room: room, _id: _id, message: res.msg })
+            socket.to(sender_room._id.toString()).emit("u/chats/receiveMsg", {message: res.msg });        
+            socket.emit("u/chats/messageSent", { room: sender_room, _id: _id, message: res.msg })
           
         }
         else {
@@ -37,8 +39,9 @@ const socketOperationSendMessage = async (io, socket, data) => {
 
     }
     catch (err) {
-        console.log("sendMessage Error")
-        console.log(err)
+        console.error("sendMessage Error: "+err)
+  
+        
     }
 }
 

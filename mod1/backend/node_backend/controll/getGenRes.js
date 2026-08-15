@@ -24,7 +24,7 @@ let text="";
       const result = await model.generateContent(prompt);
        text =  result.response.text();
       
-    } catch(e){ console.log(e) }
+    } catch(e){ console.error(e) }
 
      return text;
  

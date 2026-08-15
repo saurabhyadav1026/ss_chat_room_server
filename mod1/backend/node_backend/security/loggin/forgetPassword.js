@@ -37,7 +37,7 @@ export const verifyResetPasswordLink=async (token)=>{
 let status=true;
      jwt.verify(token, process.env.ACCESS_TOKEN_SECRET,(err,decoded)=>{
      
-        if(err){ console.log(err);status= false}
+        if(err){ console.error(err);status= false}
     })
 return status;
 }
@@ -48,7 +48,7 @@ export  const resetPassword=async(token,password)=>{
 
    let status=true;
  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET,async(err,decoded)=>{
-        if(err){console.log(err);return false;}
+        if(err){console.error(err);return false;}
         else {
          if(decoded.payloade._id) status=await setPassword(decoded.payloade._id,password);
           

@@ -5,9 +5,7 @@ import Chat_Room from "../../db/models/chat_room_model.js";
 
 
 const newRoomId=async(userId,receiverId)=>{
-
-let mem=([mongoose.Types.ObjectId(userId),mongoose.Types.ObjectId(receiverId)].sort((a, b) => a.toString().localeCompare(b.toString())));
-   const room = await Chat_Room.findOneAndUpdate(
+let mem = [userId.toString(), receiverId.toString()].sort().map(id => new mongoose.Types.ObjectId(id));  const room = await Chat_Room.findOneAndUpdate(
   {
     members: mem
   },

@@ -16,7 +16,7 @@ if(!req.cookies.refreshToken){res.status(200).send({ message: "Session Expire" }
         if (error) {
 
             
-            console.log("jwt verification appauth error")
+        console.error(error)
             res.clearCookie("refreshToken");
             res.status(420).send({ message: "Session Expire" })
         }
@@ -38,7 +38,7 @@ let token=accessToken.split(" ")[1];
 jwt.verify(token,process.env.ACCESS_TOKEN_SECRET,(err,decoded)=>{
 
     if(err){
-        console.log(err)
+        console.error(err)
         return res.status(401).json({message:"invalid token "})
              
     }

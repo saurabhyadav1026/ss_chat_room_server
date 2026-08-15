@@ -31,7 +31,7 @@ loggingRouter.get("/isuseravailble",async(req,res)=>{
 try {const val =await User.find({"public_info.username":req.query.username});
   res.json({status:!val.length>0});
 }catch(err){
-  console.log(err);
+  console.error(err);
   res.json({status:false})
 }
 
@@ -61,7 +61,7 @@ setLogged(res,u._id)
   
   res.status(200).json({staus:false})}}
  catch(err){
-  console.log(err);
+  console.error(err);
  
   res.status(403).json({status:false})
  }
@@ -75,7 +75,7 @@ try{
   res.status(200).send({status:await forgetPassword(req.query.email.toLowerCase())})
 }
 catch(err){
-  console.log(err);
+  console.error(err);
   res.status(399).send({status:false})
 }
 })
@@ -99,7 +99,7 @@ loggingRouter.get("/setpassword",async (req,res)=>{
 status= await resetPassword(token,req.query.password)
     }
 catch(err){
-    console.log(err);
+    console.error(err);
     status=false;
   
 }

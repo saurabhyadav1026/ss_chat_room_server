@@ -66,7 +66,7 @@ const res=await textAssistanceModel(prompt);
 const response = res.text;
  return response;
 }catch(err){
-    console.log(err)
+    console.error(err)
     return "Your Free limit is Exceeded."
 }
 

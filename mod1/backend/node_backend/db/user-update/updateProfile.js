@@ -12,7 +12,7 @@ if(!userId||!newName|| newName==="")return{status:false,msg: "Something is missi
     )
 return {status:true,newName}
 } catch(err){
-        console.log(err);
+        console.error(err);
         return {status:false,msg: "failed to update name"}
     }
 }
@@ -31,7 +31,7 @@ if(await User.find({"public_info.username":newUsername}))return {status:false,ms
     return {status:true,newUsername}
     }
     catch(err){
-        console.log(errr);
+        console.error(errr);
         return {status:false,msg: "failed to update username"}
     }
 }
@@ -52,7 +52,7 @@ if(!userId||!newAbout|| newAbout==="")return {status:false,msg: "Something is mi
     return {status:true,newAbout}
     }
     catch(err){
-        console.log(errr);
+        console.error(errr);
         return {status:false,msg: "failed to update username"}
     }
 }
@@ -70,7 +70,7 @@ if(!userId||!newDP|| newDP==="")return {status:false,msg: "Something is missing,
     return {status:true,newDP}
     }
     catch(err){
-        console.log(errr);
+        console.error(errr);
         return {status:false,msg: "failed to update username"}
     }
 }
@@ -91,7 +91,7 @@ if(!userId||!newAbout|| newAbout==="")return {status:false,msg: "Something is mi
     return {status:true,newName,newAbout}
     }
     catch(err){
-        console.log(err);
+        console.error(err);
         return {status:false,msg: "failed to update username"}
     }
 }

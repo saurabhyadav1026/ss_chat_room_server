@@ -21,8 +21,7 @@ import sendOtp from './mail/sendOtp.js';
 import loggingRouter from './api/logging/logging_api.js';
 import { socketIntegration } from './socketcomuniation/config/mainsocket.js'
 import visitTracker from './security/privacy/visitTracker.js';
-import funChatRouter from './routes/funchatRouter.js';
-
+import funChatRouter from './routes/funchatRouter.js';  
 
 dotenv.config()
 
@@ -104,12 +103,8 @@ res.status(200).send({status:true})
 
 
 } catch (err) {
-  console.log("DB not connected")
+  console.error("DB not connected"+ err)
 }
-
-
-
-
 
 
 

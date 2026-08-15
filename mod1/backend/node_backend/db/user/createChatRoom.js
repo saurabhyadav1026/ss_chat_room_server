@@ -30,7 +30,7 @@ const createChatRoom = async (members) => {
 
         return { status: true, _id: _id };
     } catch (err) {
-        console.log(err);
+        console.error(err);
         return { status: false }
     }
 
