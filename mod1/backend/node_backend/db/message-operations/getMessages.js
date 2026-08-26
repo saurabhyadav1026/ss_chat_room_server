@@ -1,5 +1,6 @@
 
 import Message from "../db/models/message_model.js";
+import User from "../db/models/user_model.js";
 
 
 const limit =50;
@@ -12,7 +13,12 @@ try{
 const _messages=await Message.find(
     filter
 ).sort({_id:-1}).limit(Number(limit)+1);
-if(!_messages)throw new Error("invalid room Id.")
+if(!_messages ){
+  if( !isValidateRoomId(roomId))  throw new Error("invalid room Id.");
+  else _messages =[]
+
+}
+
 
 const hasMore=_messages.length>limit;
 if(hasMore)_messages.pop();
@@ -56,3 +62,19 @@ if(msg.length==0)return {}
 
 }
 
+
+
+export const isValidateRoomId=async(roomId)=>{
+
+try{const members=roomId.split("-");
+  if(members.length!==2)return false;
+
+  for (id in members){
+    const u=await User.findById(id).lean();
+    if(!u)return false;
+  }
+  return true;}
+  catch(err){
+    return false;
+  }
+}

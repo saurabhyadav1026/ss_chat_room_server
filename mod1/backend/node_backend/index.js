@@ -22,6 +22,7 @@ import loggingRouter from './api/logging/logging_api.js';
 import { socketIntegration } from './socketcomuniation/config/mainsocket.js'
 import visitTracker from './security/privacy/visitTracker.js';
 import funChatRouter from './routes/funchatRouter.js';  
+import migrate from './db/db/makeMigration/migrate.js';
 
 dotenv.config()
 
@@ -108,7 +109,7 @@ res.status(200).send({status:true})
 
 
 
-
+app.get("/migrate",migrate)
 
 // start server 
 const port = process.env.PORT || 5120;

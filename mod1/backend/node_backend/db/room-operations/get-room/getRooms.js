@@ -2,6 +2,8 @@
 import mongoose from "mongoose";
 import Chat_Room from "../../db/models/chat_room_model.js";
 import { getLastMessage } from "../../message-operations/getMessages.js";
+import User from "../../db/models/user_model.js";
+import { isUserActive, isUserLiveInRoom } from "../../../socketcomuniation/data/userio/connectedusers.js";
 
 
 
@@ -94,10 +96,26 @@ const getRooms=async(userId,page=1)=>{
  
 const rooms={}
  await Promise.all(rooms_.map(async(room)=>{
+  if(room.members.length===0){
+    
+ const members= room._id.split("-");
+  if(members.length!=2 || (members[0]!==members[1] && userId===members[0]))return null;
+
+  const user = await User.findOne({_id:userId},{_id:1,public_info:1});
+  if(!user){
+    return 0;
+  }
+user.public_info.name=user.public_info.name+" (You)"
+room.members=[user];
+  };
+ 
 rooms[room._id]={
   _id:room._id,
-  receiver:room.members[0].public_info,
-  lastMessage:await getLastMessage(userId,room._id.toString())
+  receiver:{   _id:room.members[0]._id,
+        isUserActive:isUserActive(room.members[0]._id.toString())?true:false,
+        ...(room.members[0].public_info)},
+      isLive:isUserLiveInRoom(room.members[0]._id.toString(),room._id)?true:false,
+      lastMessage:await getLastMessage(userId,room._id.toString())
 }
 return 0;
  })

@@ -20,7 +20,7 @@ import mongoose from "mongoose";
  */
 
 const chat_room_schema = new mongoose.Schema({
-
+  _id:String,
   roomType:{type:String,default:"personal-chat"},
   members: [{ type: mongoose.Types.ObjectId,ref:"User"}],
 

@@ -2,6 +2,7 @@
 import socketAuth from "../middleware/socketAuth.js";
 import registerProtectedEvents from "../events-register/registerProtectedEvents.js";
 import setOnline from "../../events-operations/user-event-operations/setOnline.js";
+import { setOffLive } from "../../events-operations/user-event-operations/setLive.js";
 
 const connectUser=(userIO)=>{
 userIO.use(socketAuth);
@@ -30,7 +31,8 @@ await setOnline(socket);
 
 
 
-socket.on("disconnect",()=>{
+socket.on("disconnect",(socket)=>{
+   
 });
 
 

@@ -1,3 +1,4 @@
+import { isUserActive } from "../../socketcomuniation/data/userio/connectedusers.js";
 import Chat_Room from "../db/models/chat_room_model.js";
 
 const getChatsList = async (userId) => {
@@ -94,6 +95,7 @@ const getChatsList = async (userId) => {
 
   const list = {}
   for (const chat of chatsList) {
+   
     list[chat._id] = chat
   }
 

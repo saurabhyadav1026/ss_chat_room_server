@@ -7,11 +7,14 @@ import getSearchList from '../../db/user/searchList.js';
 
 import getMessages from "../../db/message-operations/getMessages.js"
 import getRoomByRoomId from '../../db/room-operations/get-room/getRoomByRoomId.js';
-import getRoomByReceiverId, { getRoomIdByReceiverId } from '../../db/room-operations/get-room/getRoomByReceiverId.js';
+import  getNewDummyRoom from '../../db/room-operations/get-room/getNewDummyRoom.js';
 import getRooms from '../../db/room-operations/get-room/getRooms.js';
 import { changeDP, updateMe } from '../../db/user-update/updateProfile.js';
 import { getLogginedUser, setLoggetOut } from '../../security/loggin/setlogged.js';
+import setLive, { setOffLive } from '../../socketcomuniation/events-operations/user-event-operations/setLive.js';
+import { isUserActive, isUserLiveInRoom, setUserActive } from '../../socketcomuniation/data/userio/connectedusers.js';
 import { io } from '../../index.js';
+
 
 
 const usersRoute = express.Router();
@@ -77,12 +80,16 @@ try{  const {input}=req.query;
 usersRoute.get("/getmessages",async(req,res)=>{
 const userId=req.userId
   try{const roomId=req.query._id;
+
   const messages=await getMessages(userId,roomId,req.query.cursor);
-  
+
    if(messages.status) res.status(200).send({messages:messages.data});
-   else res.status(400).send({messages:"error"});
- 
+   else {
+    setOffLive(req.query.socketId,req.userId)
+    return res.status(400).send({messages:"error"});
+ }
 }catch(err){
+  setOffLive(req.query.socketId,req.userId,req.query.roomId)
   console.error(err)
   res.status(401).send({status:false})
 }
@@ -115,7 +122,7 @@ catch(err){
 usersRoute.get("/verifyme",async(req,res)=>{
 
   try {
-
+    setUserActive(req.userId);
   const response=await getLogginedUser(req); 
   
   res.status(200).json(response);
@@ -138,6 +145,7 @@ usersRoute.get("/userprofile",async(req,res)=>{
        _id:user._id,
        name:user.public_info.name,
        username:user.public_info.username,
+       isUserActive:isUserActive(user._id.toString())?true:false,
        dp:user.public_info.dp,
        about:user.public_info.about,
      }
@@ -153,34 +161,34 @@ usersRoute.get("/userprofile",async(req,res)=>{
 
 
 usersRoute.get("/getroombyroomid",async(req,res)=>{
-  let room;
-  if(req.query._id.slice(0,3)=="new"){
-    room=await getRoomByReceiverId(req.userId,req.query._id.slice(3));
-  }
 
-  else {
-    room=await getRoomByRoomId(req.userId,req.query._id);
-  const socket = io.userIO.sockets.get(req.query.socketId);
- 
-  socket.join(room._id.toString());
-  
+  try{
+
+
+
+  let room =await getRoomByRoomId(req.userId,req.query._id);
+
+  if(!room){
+    room=await getNewDummyRoom(req.userId,req.query._id)
   }
-if(!room){
+ 
+  if(!room){
   res.status(404).send({status:false,message:"Invalid room"});
+  return;
 }
+
+
+
+
   res.status(200).send({status:true,room:room});
+}catch(err){
+  console.error(err);
+   res.status(404).send({status:false,message:"Invalid room"});
+}
 
 })
 
 
-
-usersRoute.get("/getroomidbyreceiverid",async(req,res)=>{
-  const room=await getRoomIdByReceiverId(req.userId,req.query._id);
- 
-
-  res.status(200).send(room);
-
-})
 
 
 usersRoute.post("/logoutme",(req,res)=>{

@@ -11,7 +11,7 @@ import mongoose from "mongoose";
  try {   let tempMsg={
         senderId:new mongoose.Types.ObjectId(senderId),
         text:text,
-        roomId:new mongoose.Types.ObjectId(roomId)
+        roomId
     }
 
     const msg=(await (new Message(tempMsg)).save());

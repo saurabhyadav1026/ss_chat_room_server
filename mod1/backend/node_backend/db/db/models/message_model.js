@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 
 const message_schema = new mongoose.Schema({
 
-  roomId: { type:mongoose.Types.ObjectId, ref: "Chat_Room", required: true },
+  roomId: { type:String, ref: "Chat_Room", required: true },
   senderId: { type:mongoose.Types.ObjectId, ref: "User",required:true},
 text:{type:String,required:true},
    
