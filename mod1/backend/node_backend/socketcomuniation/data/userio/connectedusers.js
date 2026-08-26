@@ -38,7 +38,7 @@ export const setUserOffLiveInRoom=(userId,roomId)=>{
 
 
 export const  setUserActive=(userId,socketId="sbh")=>{
-    console.log("we setting user to active")
+  
 ActiveUser.set(userId,socketId);
 return true;
 }
