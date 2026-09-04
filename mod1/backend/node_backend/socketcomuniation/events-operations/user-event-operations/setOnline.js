@@ -1,12 +1,16 @@
 
+import getRoomsId from "../../../db/room-operations/get-room/getRoomsId.js";
+import { isUserActive, setOffLiveRoomByUserId, setUserActive, setUserInActive } from "../../data/userio/connectedusers.js";
+import { setOffLive } from "./setLive.js";
+
 
 
 
 const setOnline=async (socket)=>{
    try{
-    
+     setUserActive(socket.userId,socket.id);
     socket.join(socket.userId);    // to join its id room
-
+emitRoomTOUserOnline(socket)
    
     // to do  double tick
      
@@ -21,24 +25,50 @@ catch(err){
 export default setOnline; 
 
 
-import getRoomsId from "../../../db/room-operations/get-room/getRoomsId.js";
 
 
-
-
-
-export const setOffline=async (socket)=>{
+export const setOffline= async(socket)=>{
+ 
    try{
-    
-    socket.leave(socket.userId);    // to join its id room
+    setUserInActive(socket.userId)
+    socket.leave(socket.userId);  
 
+ const rooms=setOffLiveRoomByUserId(socket.userId)
+  rooms.forEach((roomId) => {
+    setOffLive(socket,roomId)
+  
+});
    
-    // to do  double tick
-     
+
+await emitRoomTOUserOffline(socket);
     return true;
 }
 catch(err){
     console.error(err);
     return false;
 }
+}
+
+
+
+export const emitRoomTOUserOnline=async(socket)=>{
+
+const roomsIdList=await getRoomsId(socket.userId);
+roomsIdList.forEach(id=>{
+   if(isUserActive(id)){ socket.to(id).emit("u/chats/setRoomReceiverActive",{roomId:[socket.userId,id].sort().join("-").toString()})
+}
+})
+
+
+}
+
+
+export const emitRoomTOUserOffline=async(socket)=>{
+
+const roomsIdList=await getRoomsId(socket.userId);
+roomsIdList.forEach(id=>{
+   if(isUserActive(id)) socket.to(id).emit("u/chats/setRoomReceiverInActive",{roomId:[socket.userId,id].sort().join("-").toString()})
+})
+
+
 }

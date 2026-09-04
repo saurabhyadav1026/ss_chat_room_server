@@ -37,7 +37,7 @@ export const setUserOffLiveInRoom=(userId,roomId)=>{
 }
 
 
-export const  setUserActive=(userId,socketId="sbh")=>{
+export const    setUserActive=(userId,socketId="sbh")=>{
   
 ActiveUser.set(userId,socketId);
 return true;
@@ -46,4 +46,17 @@ return true;
 export const setUserInActive=(userId)=>{
     ActiveUser.delete(userId);
     return true;
+}
+
+
+export const setOffLiveRoomByUserId=(userId)=>{
+let rooms=[]
+    RoomLive.keys().forEach((roomId)=> {
+       if( roomId.split("-").includes(userId)){
+        setUserOffLiveInRoom(userId,roomId);
+       rooms.push(roomId)
+      
+       }
+    });
+    return rooms;
 }

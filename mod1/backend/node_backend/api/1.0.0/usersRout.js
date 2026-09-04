@@ -11,9 +11,10 @@ import  getNewDummyRoom from '../../db/room-operations/get-room/getNewDummyRoom.
 import getRooms from '../../db/room-operations/get-room/getRooms.js';
 import { changeDP, updateMe } from '../../db/user-update/updateProfile.js';
 import { getLogginedUser, setLoggetOut } from '../../security/loggin/setlogged.js';
-import setLive, { setOffLive } from '../../socketcomuniation/events-operations/user-event-operations/setLive.js';
-import { isUserActive, isUserLiveInRoom, setUserActive } from '../../socketcomuniation/data/userio/connectedusers.js';
-import { io } from '../../index.js';
+import  { setOffLive } from '../../socketcomuniation/events-operations/user-event-operations/setLive.js';
+import { isUserActive } from '../../socketcomuniation/data/userio/connectedusers.js';
+import upload  from '../../multer/config.js';
+
 
 
 
@@ -41,9 +42,16 @@ res.status(200).send(result)
 })
 
 
-usersRoute.get("/updatedp",async (req,res)=>{
+usersRoute.post("/updatedp", upload.single("dp"),async (req,res)=>{
   try{
-const result= await changeDP(req.userId,req.query.newDP);
+
+    if (!req.file) {
+      return res.status(400).json({ message: "No image uploaded" });
+    }
+
+    const newDpUrl=req.file.path
+    
+const result= await changeDP(req.userId,newDpUrl);
 res.status(200).send(result)
   }
   catch (err){
@@ -122,7 +130,7 @@ catch(err){
 usersRoute.get("/verifyme",async(req,res)=>{
 
   try {
-    setUserActive(req.userId);
+   
   const response=await getLogginedUser(req); 
   
   res.status(200).json(response);

@@ -53,5 +53,53 @@ export default getRoomByRoomId;
 
 
 
+export const getSenderReceiverRoom=async(userId,roomId)=>{
+
+
+  try
+{
+ 
+  const room_ =await Chat_Room.findById(roomId) .populate({
+    path: 'members',
+    select: '_id public_info.dp public_info.username public_info.name'    // projection
+  });
+
+if(!room_ || room_.members.length!==2){
+    return null;}
+
+    let [senderIndex,receiverIndex]=[0,1];
+    if(room_.members[0]._id.toString()!==userId){
+      senderIndex=1;
+      receiverIndex=0;
+    }
+
+    const sender_room={
+        _id:room_._id,
+  receiver:{
+    _id:room_.members[receiverIndex]._id,
+    isUserActive:isUserActive(room_.members[receiverIndex]._id.toString())?true:false,
+    ...(room_.members[receiverIndex].public_info)},
+  isLive:isUserLiveInRoom(room_.members[receiverIndex]._id.toString(),room_._id)?true:false,
+  lastMessage:await getLastMessage(userId,roomId)
+
+    }
+    const receiver_room={
+        _id:room_._id,
+  receiver:{
+    _id:room_.members[senderIndex]._id,
+    isUserActive:isUserActive(room_.members[senderIndex]._id.toString())?true:false,
+    ...(room_.members[senderIndex].public_info)},
+  isLive:isUserLiveInRoom(room_.members[senderIndex]._id.toString(),room_._id)?true:false,
+  lastMessage:await getLastMessage(userId,roomId)
+    }
+return [sender_room,receiver_room]
+}catch(err){
+  console.error(err);
+  return null;
+}
+}
+
+
+
 
 

@@ -1,5 +1,5 @@
 
-import ImageKit from 'imagekit';
+import ImageKit from '@imagekit/nodejs';
 import dotenv from 'dotenv';
 dotenv.config();
 

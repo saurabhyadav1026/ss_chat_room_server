@@ -1,8 +1,6 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv'
-import MediaKit from './media/MediaKit.js'
-
 
 //new api version
 import usersRout from './api/1.0.0/usersRout.js';
@@ -88,13 +86,6 @@ res.status(200).send({status:true})
 
 
 
-  // for mediakit authentication
-  app.get('/get_authentiator', async (req, res) => {
-
-    res.status(200).json(MediaKit.getAuthenticationParameters());
-  })
-
-
 
   app.get('/getotp', async (req, res) => {
 
@@ -110,6 +101,12 @@ res.status(200).send({status:true})
 
 
 app.get("/migrate",migrate)
+
+
+
+
+
+
 
 // start server 
 const port = process.env.PORT || 5120;
