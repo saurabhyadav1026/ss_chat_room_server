@@ -7,7 +7,7 @@ const sender=nodemailer.createTransport({
     port:port,
     host:process.env.MAIL_SMTP,
     //service:'gmail',
-    secur:port===465,
+    secure:port===465,
 
     auth:{
         user:process.env.MAIL_USER,
