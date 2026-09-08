@@ -17,9 +17,9 @@
         2.  token= res.credentials
         3.   client=new OAuth2Client(clientId)
         4.  ticket= client.verifIdToken({idToken:token,audiance:clientId})
-        5.   payloade=ticket.getPayloade()
+        5.   payload=ticket.getpayload()
 
-        payloade={
+        payload={
             googleId,
             name,
             email,

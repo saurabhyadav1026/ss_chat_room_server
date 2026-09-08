@@ -15,7 +15,7 @@ res.status(420).send({message:"Session Expire"})
 }
 else{
 
-let token=generateAccessToken(decoded.payloade)
+let token=generateAccessToken(decoded.payload)
 res.status(200).send({token:token})
 
 }

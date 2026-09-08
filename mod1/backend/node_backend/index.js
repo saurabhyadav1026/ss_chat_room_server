@@ -32,11 +32,36 @@ const server = http.createServer(app);
   export const io=socketIntegration(server);
   
 
+
+
+
+const allowedOrigins = new Set(
+  process.env.FRONTEND_BASEURL.split(",").map(origin => origin.trim())
+);
+
+const corsOptions = {
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.has(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+};
+
+
+app.use(cors(corsOptions));
+app.options(/.*/, cors(corsOptions)); // Handle preflight requests
+
+
+
+/* 
 app.use(cors({
   origin: process.env.FRONTEND_BASEURL,
   methods: ["GET", 'POST', "PUT", "DELETE"],
   credentials: true
-}));
+})); */
 
 app.use(express.json());
 
@@ -87,11 +112,7 @@ res.status(200).send({status:true})
 
 
 
-  app.get('/getotp', async (req, res) => {
-
-    await sendOtp(req.query.email, res)
-
-  });
+ 
 
 
 } catch (err) {

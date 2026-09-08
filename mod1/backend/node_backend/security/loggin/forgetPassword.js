@@ -11,7 +11,7 @@ try{
     const {_id,public_info}= await User.findOne({"personal_info.email":email});
     if(_id){
         const token =jwt.sign(
-          {payloade:{_id:_id}},
+          {payload:{_id:_id}},
         process.env.ACCESS_TOKEN_SECRET,
         {expiresIn:"5d"}
     )
@@ -50,7 +50,7 @@ export  const resetPassword=async(token,password)=>{
  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET,async(err,decoded)=>{
         if(err){console.error(err);return false;}
         else {
-         if(decoded.payloade._id) status=await setPassword(decoded.payloade._id,password);
+         if(decoded.payload._id) status=await setPassword(decoded.payload._id,password);
           
             }
     })

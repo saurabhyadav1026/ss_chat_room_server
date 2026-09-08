@@ -7,6 +7,7 @@ const setLogged=(res,userId)=>{
 
 
   const refresh_token=generateRefreshToken({_id:userId});
+  const access_token=generateAccessToken({_id:userId})
 
 
 
@@ -14,10 +15,17 @@ const setLogged=(res,userId)=>{
     {httpOnly:true,
       sameSite:"None",
       secure:true,
-      maxAge:30*24*60*60*1000,
+      maxAge:15*24*60*60*1000,
     })
 
- return {status:true}
+     res.cookie("accessToken",access_token,
+    {httpOnly:true,
+      sameSite:"None",
+      secure:true,
+      maxAge:60*60*1000,
+    })
+console.log("okko")
+ return true
 
 
 }
@@ -32,9 +40,18 @@ export const setLoggetOut=(req,res)=>{
     httpOnly:true,
       sameSite:"None",
       secure:true,
-      maxAge:30*24*60*60*1000,
+      maxAge:15*24*60*60*1000,
 
   });
+
+    res.clearCookie("accessToken",
+    {httpOnly:true,
+      sameSite:"None",
+      secure:true,
+      maxAge:60*60*1000,
+    })
+
+    return true
 }
 
 
@@ -43,7 +60,7 @@ export const getLogginedUser=async(req)=>{
 
 try{  const user = await User.findOne({"_id": req.userId })
 
-  const access_token=generateAccessToken({_id:req.userId});
+  const refresh_socket_token=generateRefreshToken({_id:req.userId});
 
 const _user={
     _id:user._id,
@@ -53,7 +70,7 @@ const _user={
     about:user.public_info.about,
   }
  
-return {status:true,user:_user,token:access_token}
+return {status:true,user:_user,token:refresh_socket_token}
 
 
 }
@@ -64,3 +81,14 @@ catch(err){
 
 }
 
+
+export const refreshAccessToken=(res,userId)=>{
+const access_token=generateAccessToken({_id:req.userId});
+   res.clearCookie("accessToken",access_token,
+    {httpOnly:true,
+      sameSite:"None",
+      secure:true,
+      maxAge:60*60*1000,
+    })
+    return true;
+}

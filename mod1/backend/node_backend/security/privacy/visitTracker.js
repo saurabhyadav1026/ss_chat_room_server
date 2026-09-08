@@ -26,7 +26,7 @@ const visitTracker = async (req, res) => {
             }
             else {
 
-                userId = decoded.payloade._id;
+                userId = decoded.payload._id;
             }
         })
 

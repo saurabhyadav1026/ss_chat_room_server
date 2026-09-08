@@ -27,7 +27,7 @@ const mail=(token,user_ifo,emailId)=>{
 
 return {
 
-    from:process.env.MAIL_USER,
+    from:"Matrices <noreply@sbhtechhub.matrices.me>",
     to:emailId,
     subject:"Forget Password :    SSAPP",
     html:`<div>

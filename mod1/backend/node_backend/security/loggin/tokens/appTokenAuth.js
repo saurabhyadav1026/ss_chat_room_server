@@ -2,51 +2,64 @@
 
 
 import jwt from 'jsonwebtoken'
+import { refreshAccessToken } from '../setlogged.js';
 
 
 const appTokenAuth = (req, res, next) => {
 
-if(!req.cookies.refreshToken){res.status(200).send({ message: "Session Expire" });return;}
-
-    
-    let token = req.cookies.refreshToken;
+    try{
+    if (!req.cookies.accessToken || !req.cookies.refreshToken) { res.status(401).send({ message: "Not Authorized" }); return; }
 
 
-    jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, (error, decoded) => {
-        if (error) {
+    let token = req.cookies.accessToken;
 
-            
-        console.error(error)
+
+ return   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (error, decoded) => {
+
+
+        if (!error) {
+            req.userId = decoded.payload._id;
+            return next()
+        }
+        if (error.name === "TokenExpiredError") {
+
+           return jwt.verify(req.cookies.refreshToken, process.env.REFRESH_TOKEN_SECRET, (error, decoded) => {
+                if (!error) {
+                    req.userId = decoded.payload._id;
+                    refreshAccessToken(res,decoded.payload._id);
+                    return next()
+                }
+
+                 res.clearCookie("accessToken")
             res.clearCookie("refreshToken");
             res.status(420).send({ message: "Session Expire" })
-        }
-        else {
 
-          req.userId=decoded.payloade._id;
- next();
+        return;
+              
+            })
 
         }
+            res.clearCookie("accessToken")
+            res.clearCookie("refreshToken");
+            res.status(420).send({ message: "Session Expire" })
+
+        return;
+
+   
+
     })
 
 
-    /*   token auth
-const accessToken=req.headers.authorization;
-if(!accessToken){
-return res.status(401).json({message:"token is missing"})
-}
-let token=accessToken.split(" ")[1];
-jwt.verify(token,process.env.ACCESS_TOKEN_SECRET,(err,decoded)=>{
 
-    if(err){
-        console.error(err)
-        return res.status(401).json({message:"invalid token "})
-             
+ }catch(err){
+        console.log(err);
+        res.clearCookie("accessToken")
+            res.clearCookie("refreshToken");
+            res.status(401).send({ message: "Unauthorized" })
     }
- req.userId=decoded.payloade._id;
- console.log("authentication successfull");
- next();
 
-})  */
+
+
 }
 
 
