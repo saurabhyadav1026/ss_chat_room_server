@@ -1,5 +1,7 @@
 import nodemailer from 'nodemailer'
 import dotenv from 'dotenv'
+import { Resend } from "resend";
+
 
 dotenv.config();
 const port=Number(process.env.MAIL_PORT) || 587
@@ -17,4 +19,9 @@ const sender=nodemailer.createTransport({
 })
 
 
-export default sender;
+const resend = new Resend(process.env.MAIL_PASS);
+
+
+
+
+export default resend;

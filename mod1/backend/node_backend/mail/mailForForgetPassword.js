@@ -2,17 +2,20 @@ import { userInfo } from "node:os";
 import sender from "./sender.js";
 
 import jwt from 'jsonwebtoken'
+import resend from "./sender.js";
 
 
 const mailFOrForgetpassword=async(userId,userInfo,emailId)=>{
-let status=true;
+let status= new Promise(async (resolve) => {
+  try {
+    await resend.emails.send(mail(userId,userInfo,emailId));
 
-    sender.sendMail(mail(userId,userInfo,emailId),(err,info)=>{
-        if(err){
-            console.error(err);
-            status=false;
-        }
-    })
+    resolve(true);
+  } catch (err) {
+    console.error(err);
+    resolve(false);
+  }
+});
     return status;
 }
 

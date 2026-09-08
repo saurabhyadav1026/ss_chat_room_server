@@ -2,6 +2,7 @@
 import sender from './sender.js'
 import dotenv from 'dotenv'
 import  User  from '../db/db/models/user_model.js'
+import resend from './sender.js'
 
 dotenv.config()
 
@@ -32,7 +33,7 @@ const otp_mail={
     }
 })
  */
-
+/* 
 return new Promise((resolve) => {
     sender.sendMail(otp_mail, (err, info) => {
         if (err) {
@@ -41,9 +42,24 @@ return new Promise((resolve) => {
             resolve({ status: true });
         }
     });
+}); */
+
+
+
+
+return new Promise(async (resolve) => {
+  try {
+    await resend.emails.send(otp_mail);
+
+    resolve({ status: true });
+  } catch (err) {
+    console.error(err);
+    resolve({
+      status: false,
+      message: "Check your email address or try again later.",
+    });
+  }
 });
-
-
 }
 
 
